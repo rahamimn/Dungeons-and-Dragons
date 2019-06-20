@@ -10,20 +10,19 @@ import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
+
+		/** Check if deterministic */
 		int len = args.length;
 		boolean is_deterministic = false;
-		if (len > 1 && args[1].equals("-D")){
+		if (len > 1 && args[1].equals("-D"))
 			is_deterministic = true;
-		}
 
+
+
+		/** Get all level files */
 //		File folder = new File(args[0]);
-//		File[] listOfFiles = folder.listFiles();
-
-		String path = Paths.get("").toAbsolutePath().toString();
-
-		File folder = new File(path+"/src");
+		File folder = new File(Paths.get("").toAbsolutePath().toString()+"/src");
 		File[] listOfFiles = folder.listFiles();
-
 		ArrayList<ArrayList<Object>> list = new ArrayList<ArrayList<Object>>();
 
 		for (File file : listOfFiles) {
@@ -36,39 +35,38 @@ public class Main {
 			}
 		}
 
-		RandomGenerator num_generator = null;
-		ActionReader action_generator = null;
-
+		/** Get game actions */
 		if(is_deterministic){
-			num_generator = new DeterministicNums("user_input.txt");
-			action_generator = new DeterministicActions("random_numbers.txt");
+			RandomGenerator num_generator = new DeterministicNums("user_input.txt");
+			ActionReader action_generator = new DeterministicActions("random_numbers.txt");
 		}
 		else{
-			//num_generator = new RandomGeneratorImpl();
-			action_generator = new ActionReaderImpl();
+			//RandomGenerator num_generator = new RandomGeneratorImpl();
+			ActionReader action_generator = new ActionReaderImpl();
 		}
 
+		/** Sort level files by number */
 		class MySort implements Comparator<ArrayList<Object>> {
-			@Override
 			public int compare(ArrayList<Object> a, ArrayList<Object> b) {
 				return ((Integer) a.get(0)).compareTo((Integer)b.get(0));
 			}
 		}
 		Collections.sort(list, new MySort());
 
-		// TODO
-		createGameBoards(list);
-		Game game = new Game(list);
+		ArrayList gameBoards = createGameBoards(list);
+		Game game = new Game(gameBoards);
 		game.start();
-
-
 	}
 
-	public static ArrayList createGameBoards(ArrayList<ArrayList<Object>> boardsFileList) throws IOException {
 
-		ArrayList<Object> boardsList = new ArrayList<>();
+
+
+
+	public static ArrayList<char[][]> createGameBoards(ArrayList<ArrayList<Object>> boardsFileList) throws IOException {
+
+		ArrayList<char[][]> boardsList = new ArrayList();
+
 		for (int levelNum = 0; levelNum < boardsFileList.size(); levelNum++){
-
 			File file = (File) (boardsFileList.get(levelNum)).get(1);
 			Scanner sc = new Scanner(file);
 			int width = sc.nextLine().length();

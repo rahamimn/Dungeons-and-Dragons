@@ -1,24 +1,23 @@
 import java.util.List;
 
-public class Rogue extends Player{
+public class Rogue extends Player {
 
 	private int cost;
 	private int currentEnergy;
 	private final int maxEnergy = 100;
-	
+
 	public Rogue(String name, int health, int attackPoints, int defensePoints, Position position, int cost) {
 		super(name, health, attackPoints, defensePoints, position);
 		this.cost = cost;
 		this.currentEnergy = maxEnergy;
 	}
 
-	
 	public void levelUp(){
 		super.levelUp();
 		this.currentEnergy = maxEnergy;
 		this.incAttack(3);
 	}
-	
+
 	@Override
 	public boolean castSpecialAbility() {
 		if (this.currentEnergy < this.cost)
@@ -31,9 +30,10 @@ public class Rogue extends Player{
 		return true;
 	}
 
+
 	private void AttemptDamage(Enemy enemy, int attackPoints) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -46,16 +46,12 @@ public class Rogue extends Player{
 	@Override
 	public void gameTickUpdate() {
 		this.currentEnergy = Math.min(100, this.currentEnergy + 10);
-		
+
 	}
-	
+
 	public String playerStr(){
 		return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack()
-		+ "\tDefense: "+ this.getDefense() + "\tLevel: "+ this.getLevel() + "\tExperience: " + this.getExperience()+
-		"/50\tEnergy: " + this.currentEnergy + "/" + this.maxEnergy;
+				+ "\tDefense: "+ this.getDefense() + "\tLevel: "+ this.getLevel() + "\tExperience: " + this.getExperience()+
+				"/50\tEnergy: " + this.currentEnergy + "/" + this.maxEnergy;
 	}
-	
-
-
-
 }

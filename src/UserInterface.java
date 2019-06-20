@@ -10,8 +10,8 @@ public class UserInterface {
 	
 	public Player selectPlayer(ArrayList<Player> players){
 		System.out.println("Select Player:\n");
-		int i = 0;
-		for (i = 0; i < players.size(); i++){
+
+		for (int i = 0; i < players.size(); i++){
 			System.out.println(i+1 + ". " + players.get(i).unitStr());
 		}
 		Scanner sc = new Scanner(System.in);
