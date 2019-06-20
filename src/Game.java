@@ -65,29 +65,49 @@ public class Game {
     }
 
     // stay - 0, left - 1, right - 2, up - 3, down - 4
-    public void attemptMove(Position position, Position currPosition) {
-        if (position.inBounds()) {
-            switch (board[position.getX()][position.getY()]) {
-            case '.':
-                chosen.getPosition().setX(position.getX());
-                chosen.getPosition().setY(position.getY());
-                board[position.getX()][position.getY()] = '@';
+    public void attemptMove(Position newPosition, Position currPosition) {
+        if (newPosition.inBounds()) {
+            System.out.println ("newPosition.getX() = " + newPosition.getX()); //NIR
+            System.out.println ("newPosition.getY() = " + newPosition.getY()); //NIR
+            System.out.println ("board[newPosition.getX()][newPosition.getY()] = " + board[newPosition.getX()][newPosition.getY()]); //NIR
+
+
+            switch (board[newPosition.getX()][newPosition.getY()]) {
+            case '.':{
+                chosen.getPosition().setX(newPosition.getX());
+                chosen.getPosition().setY(newPosition.getY());
+                board[newPosition.getX()][newPosition.getY()] = '@';
                 board[currPosition.getX()][currPosition.getY()] = '.';
+                printBoardDebug(board);
                 break;
+            }
+
             case '#':
                 break;
             case '@':
                 break;
             }
         }
+        else {
+            System.out.println ("NOT IN BOUNDS "); //NIR
+        }
     }
 
     public void start() {
         chosen = ui.selectPlayer(players);
+
         boolean notOver = true;
 
         for (char[][] board : gameBoards) {
             this.board = board;
+
+            System.out.println( "ui.getUserPosition(board).getX() =  " + ui.getUserPosition(board).getX()); // NIR
+            System.out.println( "ui.getUserPosition(board).getY() =  " + ui.getUserPosition(board).getY()); // NIR
+
+            ui.getUserPosition(board).getX();
+            ui.getUserPosition(board).getY();
+            chosen.setPosition(ui.getUserPosition(board));
+
             while (notOver) {
                 ui.printBoard(board, chosen);
                 char playerMove = ui.getMoveFromUser();
@@ -97,9 +117,10 @@ public class Game {
                     attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
                     break;
                 // down
-                case 's':
+                case 's':{
                     attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
                     break;
+                }
                 // left
                 case 'a':
                     attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
@@ -114,9 +135,22 @@ public class Game {
                 // do nothing
                 case 'q':
                     break;
-
                 }
             }
         }
     }
+
+    public void printBoardDebug(char[][] board){
+        System.out.println("%%%%%%%%%%%% - - - DEBUG BEGIN - - - %%%%%%%%%%%\n");
+
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++)
+                System.out.print(board[i][j]);
+            System.out.print('\n');
+        }
+
+        System.out.println("%%%%%%%%%%%%  - - - DEBUG END - - - %%%%%%%%%%%\n");
+
+    }
 }
+

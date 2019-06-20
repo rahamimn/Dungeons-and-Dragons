@@ -25,6 +25,13 @@ public abstract class GameUnit {
 	 public Position getPosition(){
 		 return this.position;
 	 }
+
+
+	public void setPosition(Position newPos){
+	 	this.position = new Position(0,0);
+		this.position.setX(newPos.getX());
+		this.position.setY(newPos.getY());
+	}
 	 
 	 public int rollAttackForCombat(){
 		 //need to figure out hoe to send the random genertator
