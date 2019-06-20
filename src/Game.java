@@ -71,6 +71,7 @@ public class Game {
             System.out.println ("newPosition.getY() = " + newPosition.getY()); //NIR
             System.out.println ("board[newPosition.getX()][newPosition.getY()] = " + board[newPosition.getX()][newPosition.getY()]); //NIR
 
+            /** Something's wrong with the indexes */
 
             switch (board[newPosition.getX()][newPosition.getY()]) {
             case '.':{
@@ -78,7 +79,7 @@ public class Game {
                 chosen.getPosition().setY(newPosition.getY());
                 board[newPosition.getX()][newPosition.getY()] = '@';
                 board[currPosition.getX()][currPosition.getY()] = '.';
-                printBoardDebug(board);
+
                 break;
             }
 
@@ -89,7 +90,7 @@ public class Game {
             }
         }
         else {
-            System.out.println ("NOT IN BOUNDS "); //NIR
+            System.out.println ("OUT OF BOUNDS "); //NIR
         }
     }
 
@@ -98,8 +99,9 @@ public class Game {
 
         boolean notOver = true;
 
-        for (char[][] board : gameBoards) {
-            this.board = board;
+        for (char[][] currBoard : gameBoards) {
+
+            this.board = currBoard;
 
             System.out.println( "ui.getUserPosition(board).getX() =  " + ui.getUserPosition(board).getX()); // NIR
             System.out.println( "ui.getUserPosition(board).getY() =  " + ui.getUserPosition(board).getY()); // NIR
@@ -152,5 +154,18 @@ public class Game {
         System.out.println("%%%%%%%%%%%%  - - - DEBUG END - - - %%%%%%%%%%%\n");
 
     }
+
+
+    private char[][] rotateClockWise(char[][] array) {
+        int size = array.length;
+        char[][] ret = new char[size][size];
+
+        for (int i = 0; i < size; ++i)
+            for (int j = 0; j < size; ++j)
+                ret[i][j] = array[size - j - 1][i]; //***
+
+        return ret;
+    }
+
 }
 
