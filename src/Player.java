@@ -41,6 +41,19 @@ public abstract class Player extends GameUnit{
 	protected void incDefense(int mul){
 		this.attackPoints += mul * this.level;
 	}
+	
+	public int getExperience(){
+		return this.experience;
+	}
+	
+	public String unitStr(){
+		String base = super.unitStr();
+		return base + "\tLevel: "+ this.getLevel() + "\tExperience: " + this.getExperience() + "/50";
+	}
 
+	
+	public String levelUpStr(){
+		return "Level up: +" + 10 * this.getLevel() + " Health, +" + 5 * this.getLevel() + " Attack, +" + 2 * this.getLevel()+ " Defense";
+	}
 	
 }

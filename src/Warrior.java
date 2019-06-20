@@ -35,6 +35,10 @@ public class Warrior extends Player{
 			this.remaining = cooldown;
 		else
 			this.remaining--;
-		
+	}
+	
+	public String playerStr(){
+		String base = super.unitStr();
+		return base + "\tAbility cooldown: " + this.cooldown + "\tRemaining: " + this.remaining;
 	}
 }

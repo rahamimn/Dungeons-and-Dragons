@@ -48,5 +48,14 @@ public class Rogue extends Player{
 		this.currentEnergy = Math.min(100, this.currentEnergy + 10);
 		
 	}
+	
+	public String playerStr(){
+		return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack()
+		+ "\tDefense: "+ this.getDefense() + "\tLevel: "+ this.getLevel() + "\tExperience: " + this.getExperience()+
+		"/50\tEnergy: " + this.currentEnergy + "/" + this.maxEnergy;
+	}
+	
+
+
 
 }

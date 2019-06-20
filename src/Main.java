@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-    	int len = args.length;
+    	int len = args.length; 
     	boolean is_deterministic = false;
     	if (len > 1 && args[1].equals("-D")){
     		is_deterministic = true;

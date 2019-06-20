@@ -66,5 +66,16 @@ public class Mage extends Player {
 		this.currentMana = Math.min(currentMana + 1, manaPool);
 		
 	}
+	
+	public String unitStr(){
+		String base = super.unitStr();
+		return base + "\tSpellPower: " + this.spellPower + "\tMana: " + this.currentMana + "/"+ this.manaPool;
+	}
+	
+	
+	public String levelUpStr(){
+		String base = super.levelUpStr();
+		return base + "\n+" + 25 * this.getLevel() + " maximum mana, +" + 10 * this.getLevel() + " spell power";
+	}
 
 }

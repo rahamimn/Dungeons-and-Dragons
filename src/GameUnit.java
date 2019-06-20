@@ -7,6 +7,7 @@ public abstract class GameUnit {
 	protected int defensePoints;
 	private Position position;
 	
+	
 	 public GameUnit(String name, int health, int attackPoints, int defensePoints, Position position) {
 	        this.name = name;
 	        this.healthPool = health;
@@ -35,5 +36,25 @@ public abstract class GameUnit {
 		 return 0;
 	 }
 	 
+	 public String getName(){
+		 return this.name;
+	 }
+	 
+	 public int getHealth(){
+		 return this.currentHealth;
+	 }
+	 
+	 public int getAttack(){
+		 return this.attackPoints;
+	 }
+	 
+	 public int getDefense(){
+		 return this.defensePoints;
+	 }
+	 
+	 public String unitStr(){
+			return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack()
+			+ "\tDefense: "+ this.getDefense();
+		}
 
 }
