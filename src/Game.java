@@ -10,7 +10,6 @@ public class Game {
     private ArrayList<Enemy> enemies;
     private UserInterface ui = new UserInterface();
 
-
     public void initGameUnits() {
 
         players = new ArrayList<Player>();
@@ -60,7 +59,6 @@ public class Game {
         enemies.add(death_trap);
     }
 
-
     public Game(ArrayList<char[][]> gameBoards) {
         this.gameBoards = gameBoards;
         initGameUnits();
@@ -70,16 +68,16 @@ public class Game {
     public void attemptMove(Position position, Position currPosition) {
         if (position.inBounds()) {
             switch (board[position.getX()][position.getY()]) {
-                case '.':
-                    chosen.getPosition().setX(position.getX());
-                    chosen.getPosition().setY(position.getY());
-                    board[position.getX()][position.getY()] = '@';
-                    board[currPosition.getX()][currPosition.getY()] = '.';
-                    break;
-                case '#':
-                    break;
-                case '@':
-                    break;
+            case '.':
+                chosen.getPosition().setX(position.getX());
+                chosen.getPosition().setY(position.getY());
+                board[position.getX()][position.getY()] = '@';
+                board[currPosition.getX()][currPosition.getY()] = '.';
+                break;
+            case '#':
+                break;
+            case '@':
+                break;
             }
         }
     }
@@ -94,28 +92,28 @@ public class Game {
                 ui.printBoard(board, chosen);
                 char playerMove = ui.getMoveFromUser();
                 switch (playerMove) {
-                    // up
-                    case 'w':
-                        attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
-                        break;
-                    // down
-                    case 's':
-                        attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
-                        break;
-                    // left
-                    case 'a':
-                        attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
-                        break;
-                    // right
-                    case 'd':
-                        attemptMove(chosen.getPosition().getRight(), chosen.getPosition());
-                        break;
-                    //special ability
-                    case 'e':
-                        break;
-                    // do nothing
-                    case 'q':
-                        break;
+                // up
+                case 'w':
+                    attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
+                    break;
+                // down
+                case 's':
+                    attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
+                    break;
+                // left
+                case 'a':
+                    attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
+                    break;
+                // right
+                case 'd':
+                    attemptMove(chosen.getPosition().getRight(), chosen.getPosition());
+                    break;
+                // special ability
+                case 'e':
+                    break;
+                // do nothing
+                case 'q':
+                    break;
 
                 }
             }
