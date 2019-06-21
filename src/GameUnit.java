@@ -7,7 +7,6 @@ public abstract class GameUnit {
     protected int defensePoints;
     private Position position;
 
-
     public GameUnit(String name, int health, int attackPoints, int defensePoints, Position position) {
         this.name = name;
         this.healthPool = health;
@@ -18,7 +17,8 @@ public abstract class GameUnit {
     }
 
     public double range(Position other) {
-        return Math.sqrt(Math.pow(this.position.getX() - other.getX(), 2) + Math.pow(this.position.getY() - other.getY(), 2));
+        return Math.sqrt(
+                Math.pow(this.position.getX() - other.getX(), 2) + Math.pow(this.position.getY() - other.getY(), 2));
     }
 
     public Position getPosition() {
@@ -31,7 +31,6 @@ public abstract class GameUnit {
         System.out.println("> " + message + " < : (" + x + "," + y + ")");
     }
 
-
     public void setPosition(Position newPos) {
         this.position = new Position(0, 0);
         this.position.setX(newPos.getX());
@@ -39,12 +38,12 @@ public abstract class GameUnit {
     }
 
     public int rollAttackForCombat() {
-        //need to figure out hoe to send the random genertator
+        // need to figure out hoe to send the random genertator
         return 0;
     }
 
     public int rollDefenseForCombat() {
-        //need to figure out hoe to send the random genertator
+        // need to figure out hoe to send the random genertator
         return 0;
     }
 
@@ -65,19 +64,18 @@ public abstract class GameUnit {
     }
 
     public String unitStr() {
-        return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack()
-                + "\tDefense: " + this.getDefense();
+        return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack() + "\tDefense: "
+                + this.getDefense();
     }
 
-    public void decHealth(int amount){
+    public void decHealth(int amount) {
         int newHealth = this.currentHealth - amount;
 
-        if (newHealth < 0){
+        if (newHealth < 0) {
             newHealth = 0;
         }
 
         this.currentHealth = newHealth;
     }
-
 
 }
