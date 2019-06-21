@@ -17,7 +17,6 @@ public abstract class GameUnit {
         this.position = position;
     }
 
-
     public double range(Position other) {
         return Math.sqrt(Math.pow(this.position.getX() - other.getX(), 2) + Math.pow(this.position.getY() - other.getY(), 2));
     }

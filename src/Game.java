@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Game {
 
@@ -7,16 +7,14 @@ public class Game {
     private char[][] board;
     private Player chosen;
     private ArrayList<Player> players;
-    private ArrayList<Enemy> enemies;
     private ArrayList<Enemy> currEnemies;
     private UserInterface ui = new UserInterface();
+    boolean gameNotOver;
 
     public void initGameUnits() {
 
         players = new ArrayList<Player>();
-        enemies = new ArrayList<Enemy>();
         currEnemies = new ArrayList<Enemy>();
-
 
         Warrior jon_snow = new Warrior("Jon Snow", 300, 30, 4, null, 6);
         Warrior the_hound = new Warrior("The Hound", 400, 20, 6, null, 4);
@@ -31,38 +29,10 @@ public class Game {
         players.add(thoros_of_myr);
         players.add(arya_stark);
         players.add(bronn);
-
-        Monster lannister_solider = new Monster("Lannister Solider", 80, 8, 3, null, 25, 's', 3);
-        Monster lannister_knight = new Monster("Lannister Knight", 200, 14, 8, null, 50, 'k', 4);
-        Monster queens_guard = new Monster("Queens Guard", 400, 20, 15, null, 100, 'q', 5);
-        Monster wright = new Monster("Wright", 600, 30, 15, null, 100, 'z', 3);
-        Monster bear_wright = new Monster("Bear-Wright", 1000, 75, 30, null, 250, 'b', 4);
-        Monster giant_wright = new Monster("Giant-Wright", 1500, 100, 40, null, 500, 'g', 5);
-        Monster white_walker = new Monster("White Walker", 2000, 150, 50, null, 1000, 'w', 6);
-        Monster the_mountain = new Monster("The Mountain", 1000, 60, 25, null, 500, 'M', 6);
-        Monster queen_cersei = new Monster("Queen Cersei", 100, 10, 10, null, 1000, 'C', 1);
-        Monster nights_king = new Monster("Night's King", 5000, 300, 150, null, 5000, 'K', 8);
-
-        Trap bonus_trap = new Trap("Bonus \"Trap\"", 1, 1, 1, null, 250, 'B', 5, 6, 2);
-        Trap queens_trap = new Trap("Queen's Trap", 250, 50, 10, null, 100, 'Q', 4, 10, 4);
-        Trap death_trap = new Trap("Death Trap", 500, 100, 20, null, 250, 'D', 6, 10, 3);
-
-        enemies.add(lannister_solider);
-        enemies.add(lannister_knight);
-        enemies.add(queens_guard);
-        enemies.add(wright);
-        enemies.add(bear_wright);
-        enemies.add(giant_wright);
-        enemies.add(white_walker);
-        enemies.add(the_mountain);
-        enemies.add(queen_cersei);
-        enemies.add(nights_king);
-        enemies.add(bonus_trap);
-        enemies.add(queens_trap);
-        enemies.add(death_trap);
     }
 
     public Game(ArrayList<char[][]> gameBoards) {
+        gameNotOver = true;
         this.gameBoards = gameBoards;
         initGameUnits();
     }
@@ -88,89 +58,81 @@ public class Game {
     }
 
     public void start() throws Exception {
-        chosen = ui.selectPlayer(players);
 
-        boolean notOver = true;
+        userSelectPlayer();
 
-        for (char[][] currBoard : gameBoards) {
-
-            this.board = currBoard;
-
+        for (char[][] currBoard : gameBoards) { // Every currBoard is a new level
+            initCurrLevelBoard(currBoard);
+            initUserPlayer();
             initBoardUnits();
-            chosen.setPosition(ui.getUserPosition(board));
 
-            while (notOver) {
-                ui.printBoard(board, chosen);
-                char playerMove = ui.getMoveFromUser();
+            while (gameNotOver) {
+                printCurrBoard();
+                get_User_MoveAndApply();
+                /*TODO: fightIfCombat() */;
+                get_Enemies_MoveAndApply();
 
-                switch (playerMove) {
-                    // up
-                    case 'w':
-                        attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
-                        break;
-                    // down
-                    case 's': {
-                        attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
-                        break;
-                    }
-                    // left
-                    case 'a':
-                        attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
-                        break;
-                    // right
-                    case 'd':
-                        attemptMove(chosen.getPosition().getRight(), chosen.getPosition());
-                        break;
-                    // special ability
-                    case 'e':
-                        break;
-                    // do nothing
-                    case 'q':
-                        break;
+                /** TODO:
+                 *
+                if (isGameOver()){
+                    // Do stuff
+                    return;
                 }
 
-                applyEnemiesMove();
-
-
+                if (isNextLevel){
+                 // Do stuff
+                    break;
+                 */
             }
         }
     }
 
-    public void printBoardDebug(char[][] board) {
-        System.out.println("%%%%%%%%%%%% - - - DEBUG BEGIN - - - %%%%%%%%%%%\n");
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++)
-                System.out.print(board[i][j]);
-            System.out.print('\n');
+    private void get_User_MoveAndApply() {
+        char playerMove = ui.getMoveFromUser();
+        switch (playerMove) {
+            // up
+            case 'w':
+                attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
+                break;
+            // down
+            case 's': {
+                attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
+                break;
+            }
+            // left
+            case 'a':
+                attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
+                break;
+            // right
+            case 'd':
+                attemptMove(chosen.getPosition().getRight(), chosen.getPosition());
+                break;
+            // special ability
+            case 'e':
+                break;
+            // do nothing
+            case 'q':
+                break;
         }
-        System.out.println("%%%%%%%%%%%%  - - - DEBUG END - - - %%%%%%%%%%%\n");
     }
 
-
-    private char[][] rotateClockWise(char[][] array) {
-        int size = array.length;
-        char[][] ret = new char[size][size];
-
-        for (int i = 0; i < size; ++i)
-            for (int j = 0; j < size; ++j)
-                ret[i][j] = array[size - j - 1][i]; //***
-
-        return ret;
+    private void printCurrBoard() {
+        ui.printBoard(board, chosen);
     }
 
-
-    public void printCell(int x, int y, String message) {
-        char content = board[x][y];
-        System.out.println("{ " + message + " } | (" + x + "," + y + ") content: " + content);
+    private void initUserPlayer() {
+        chosen.setPosition(ui.getUserPosition(board));
     }
 
-    public void printCell(Position pos, String message) {
-        char content = board[pos.getX()][pos.getY()];
-        System.out.println("{ " + message + " } | (" + pos.getX() + "," + pos.getY() + ") content: " + content);
+    private void initCurrLevelBoard(char[][] currBoard) {
+        this.board = currBoard;
+    }
+
+    private void userSelectPlayer() {
+        chosen = ui.selectPlayer(players);
     }
 
     public void initBoardUnits() {
-
         for (int x = 0; x < board.length; x++) {
             for (int y = 0; y < board[x].length; y++) {
                 switch (board[x][y]) {
@@ -241,29 +203,19 @@ public class Game {
                 }
             }
         }
-
-        for (Enemy enemy : currEnemies) {
-            //System.out.println(enemy.unitStr()); //NIR
-        }
     }
 
-    public void applyEnemiesMove() throws Exception {
+    public void get_Enemies_MoveAndApply() throws Exception {
         for (Enemy enemy : currEnemies) {
             int moveNum = enemy.turn(chosen.getPosition());
             updateEnemyPosition(enemy, moveNum);
         }
-//        for (Enemy enemy : currEnemies) {
-//            enemy.printPosition(enemy.getName());
-//        }
     }
 
     public void updateEnemyPosition(GameUnit gameUnit, int moveNum) throws Exception {
 
-
-        Position newPosition = new Position(0, 0);
+        Position newPosition;
         Position currPosition = gameUnit.getPosition();
-
-        //System.out.println("MoveNum = " + moveNum);
 
         switch (moveNum) {
             case 1:
@@ -285,15 +237,10 @@ public class Game {
         if (newPosition.inBounds() && currPosition.inBounds()) {
             switch (board[newPosition.getX()][newPosition.getY()]) {
                 case '.': {
-//                    printCell(currPosition, "currPosition after");
-//                    printCell(newPosition, "newPosition after");
                     char gameUnitTile = board[currPosition.getX()][currPosition.getY()];
                     gameUnit.setPosition(newPosition);
                     board[newPosition.getX()][newPosition.getY()] = gameUnitTile;
                     board[currPosition.getX()][currPosition.getY()] = '.';
-//                    printCell(currPosition, "currPosition after");
-//                    printCell(newPosition, "newPosition after");
-
                     break;
                 }
                 case '#':
@@ -304,6 +251,36 @@ public class Game {
         } else {
             System.out.println("OUT OF BOUNDS "); //NIR
         }
+    }
+
+
+
+
+
+
+
+
+
+    // ----------------------------- DEBUG HELPERS ----------------------------
+
+    public void printBoardDebug(char[][] board) {
+        System.out.println("- - - - - - - - -  DEBUG BEGIN - - - - - - - - -\n");
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++)
+                System.out.print(board[i][j]);
+            System.out.print('\n');
+        }
+        System.out.println("- - - - - - - - - DEBUG END - - - - - - - - -\n");
+    }
+
+    public void printCell(int x, int y, String message) {
+        char content = board[x][y];
+        System.out.println("{ " + message + " } | (" + x + "," + y + ") content: " + content);
+    }
+
+    public void printCell(Position pos, String message) {
+        char content = board[pos.getX()][pos.getY()];
+        System.out.println("{ " + message + " } | (" + pos.getX() + "," + pos.getY() + ") content: " + content);
     }
 
 
