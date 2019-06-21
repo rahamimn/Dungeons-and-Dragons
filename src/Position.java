@@ -26,24 +26,29 @@ public class Position {
 	}
 	
 	public Position getUp(){
-		return new Position(x, y-1);
-	}
-	
-	public Position getDown(){
-		return new Position(x, y+1);
-	}
-	
-	public Position getLeft(){
 		return new Position(x-1, y);
 	}
 	
-	public Position getRight(){
+	public Position getDown(){
 		return new Position(x+1, y);
+	}
+	
+	public Position getLeft(){
+		return new Position(x, y-1);
+	}
+	
+	public Position getRight(){
+		return new Position(x, y+1);
 	}
 
 	public boolean inBounds() {
 		return (x >= 0 && y >= 0);
 	}
-	
+
+	public void printPosition(String message){
+		System.out.println("["+message+"] | ("+x+","+y+")");
+	}
+
+
 
 }

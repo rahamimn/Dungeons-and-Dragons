@@ -1,5 +1,3 @@
-import javafx.geometry.Pos;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,6 +11,7 @@ public class UserInterface {
 		for (int i = 0; i < players.size(); i++){
 			System.out.println(i+1 + ". " + players.get(i).unitStr());
 		}
+
 		Scanner sc = new Scanner(System.in);
 		int choice = sc.nextInt();
 		Player chosen = players.get(choice-1);
@@ -37,20 +36,6 @@ public class UserInterface {
 		System.out.println(player.unitStr());
 	}
 
-
-	public void printBoardDebug(char[][] board){
-		System.out.println("%%%%%%%%%%%% DEBUG BEGIN %%%%%%%%%%%");
-
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < board[i].length; j++)
-				System.out.print(board[i][j]);
-			System.out.print('\n');
-		}
-
-		System.out.println("%%%%%%%%%%%% DEBUG END %%%%%%%%%%%");
-
-	}
-	
 	public void printCombat(GameUnit attacker, GameUnit defender, int attackPoints, int defensePoints, int damage){
 		System.out.println(attacker.getName() + " engaged in battle with " + defender.getName());
 		System.out.println(attacker.unitStr());
@@ -62,7 +47,6 @@ public class UserInterface {
 	}
 
 	public Position getUserPosition(char[][] board){
-
 		for (int x = 0; x < board.length; x++){
 			for (int y = 0; y < board[x].length; y++){
 				if (board[x][y] == '@'){
@@ -72,8 +56,7 @@ public class UserInterface {
 		}
 		throw new NullPointerException("No user player on board");
 	}
-	
-	
+
 	public void printLevelUp(Player player){
 		System.out.println(player.levelUpStr());
 	}
