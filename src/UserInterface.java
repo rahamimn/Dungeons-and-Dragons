@@ -63,6 +63,7 @@ public class UserInterface {
 
 	public Position getUserPosition(char[][] board){
 
+		System.out.println("board.length = " + board.length);
 		for (int x = 0; x < board.length; x++){
 			for (int y = 0; y < board[x].length; y++){
 				if (board[x][y] == '@'){

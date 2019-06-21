@@ -26,6 +26,12 @@ public abstract class GameUnit {
 		 return this.position;
 	 }
 
+	public void printPosition(String message){
+		int x = this.getPosition().getX();
+		int y = this.getPosition().getY();
+	 	System.out.println("> " + message + " < : (" + x + "," + y + ")");
+	}
+
 
 	public void setPosition(Position newPos){
 	 	this.position = new Position(0,0);

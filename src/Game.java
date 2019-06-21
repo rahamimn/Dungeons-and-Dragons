@@ -67,18 +67,22 @@ public class Game {
     // stay - 0, left - 1, right - 2, up - 3, down - 4
     public void attemptMove(Position newPosition, Position currPosition) {
         if (newPosition.inBounds()) {
-            System.out.println ("newPosition.getX() = " + newPosition.getX()); //NIR
-            System.out.println ("newPosition.getY() = " + newPosition.getY()); //NIR
-            System.out.println ("board[newPosition.getX()][newPosition.getY()] = " + board[newPosition.getX()][newPosition.getY()]); //NIR
-
-            /** Something's wrong with the indexes */
 
             switch (board[newPosition.getX()][newPosition.getY()]) {
             case '.':{
-                chosen.getPosition().setX(newPosition.getX());
-                chosen.getPosition().setY(newPosition.getY());
+                printCell(currPosition, "currPosition before");
+                printCell(newPosition, "newPosition before");
+
+//                chosen.getPosition().setX(newPosition.getX());
+//                chosen.getPosition().setY(newPosition.getY());
+
+                chosen.setPosition(newPosition);
+
                 board[newPosition.getX()][newPosition.getY()] = '@';
                 board[currPosition.getX()][currPosition.getY()] = '.';
+
+                printCell(currPosition, "currPosition after");
+                printCell(newPosition, "newPosition after");
 
                 break;
             }
@@ -103,16 +107,16 @@ public class Game {
 
             this.board = currBoard;
 
-            System.out.println( "ui.getUserPosition(board).getX() =  " + ui.getUserPosition(board).getX()); // NIR
-            System.out.println( "ui.getUserPosition(board).getY() =  " + ui.getUserPosition(board).getY()); // NIR
-
-            ui.getUserPosition(board).getX();
-            ui.getUserPosition(board).getY();
             chosen.setPosition(ui.getUserPosition(board));
 
+            int i = 0;
             while (notOver) {
+
+                System.out.println("This is the " + i++ + " iteration");
+
                 ui.printBoard(board, chosen);
                 char playerMove = ui.getMoveFromUser();
+
                 switch (playerMove) {
                 // up
                 case 'w':
@@ -120,6 +124,7 @@ public class Game {
                     break;
                 // down
                 case 's':{
+                    chosen.printPosition("1");
                     attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
                     break;
                 }
@@ -144,15 +149,12 @@ public class Game {
 
     public void printBoardDebug(char[][] board){
         System.out.println("%%%%%%%%%%%% - - - DEBUG BEGIN - - - %%%%%%%%%%%\n");
-
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[i].length; j++)
                 System.out.print(board[i][j]);
             System.out.print('\n');
         }
-
         System.out.println("%%%%%%%%%%%%  - - - DEBUG END - - - %%%%%%%%%%%\n");
-
     }
 
 
@@ -166,6 +168,18 @@ public class Game {
 
         return ret;
     }
+
+
+    public void printCell(int x, int y, String message){
+        char content = board[x][y];
+        System.out.println("{ "+message+" } | ("+x+","+y+") content: " + content);
+    }
+
+    public void printCell(Position pos, String message){
+        char content = board[pos.getX()][pos.getY()];
+        System.out.println("{ "+message+" } | ("+pos.getX()+","+pos.getY()+") content: " + content);
+    }
+
 
 }
 
