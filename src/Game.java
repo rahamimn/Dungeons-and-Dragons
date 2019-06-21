@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 public class Game {
 
     private ArrayList<char[][]> gameBoards;
@@ -10,10 +9,6 @@ public class Game {
     private ArrayList<Enemy> currEnemies;
     private UserInterface ui = new UserInterface();
     boolean gameNotOver;
-<<<<<<< HEAD
-    int enemiesCounter;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
 
     public void initGameUnits() {
 
@@ -45,19 +40,19 @@ public class Game {
     public void attemptMove(Position newPosition, Position currPosition) {
         if (newPosition.inBounds()) {
             switch (board[newPosition.getX()][newPosition.getY()]) {
-                case '.': {
-                    chosen.setPosition(newPosition);
-                    board[newPosition.getX()][newPosition.getY()] = '@';
-                    board[currPosition.getX()][currPosition.getY()] = '.';
-                    break;
-                }
-                case '#':
-                    break;
-                case '@':
-                    break;
+            case '.': {
+                chosen.setPosition(newPosition);
+                board[newPosition.getX()][newPosition.getY()] = '@';
+                board[currPosition.getX()][currPosition.getY()] = '.';
+                break;
+            }
+            case '#':
+                break;
+            case '@':
+                break;
             }
         } else {
-            System.out.println("OUT OF BOUNDS "); //NIR
+            System.out.println("OUT OF BOUNDS "); // NIR
         }
     }
 
@@ -73,45 +68,35 @@ public class Game {
             while (gameNotOver) {
                 printCurrBoard();
                 get_User_MoveAndApply();
-                /*TODO: fightIfCombat() */;
-<<<<<<< HEAD
-                //fightIfCombat(enemy);
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
+                /* TODO: fightIfCombat() */;
+                // fightIfCombat(enemy);
                 get_Enemies_MoveAndApply();
 
-                /** TODO:
+                /**
+                 * TODO:
                  *
-                if (isGameOver()){
-                    // Do stuff
-                    return;
-                }
-
-                if (isNextLevel){
-                 // Do stuff
-                    break;
+                 * if (isGameOver()){ // Do stuff return; }
+                 * 
+                 * if (isNextLevel){ // Do stuff break;
                  */
             }
         }
     }
-<<<<<<< HEAD
 
     private void fightIfCombat(Enemy enemy) {
 
-
         // TODO: finish this
-        if (hasCombat())
-        {
+        if (hasCombat()) {
             System.out.println("FIGHT!");
             int userAttackPts = chosen.rollAttackForCombat();
             int enemyDefensePts = enemy.rollDefenseForCombat();
 
             int diff = userAttackPts - enemyDefensePts;
 
-            if (diff > 0){
-                enemy.decHealth(0-diff); // diff is negative
+            if (diff > 0) {
+                enemy.decHealth(0 - diff); // diff is negative
 
-                if (enemy.getHealth() <= 0){
+                if (enemy.getHealth() <= 0) {
                     chosen.decExperience(diff); // diff is negative
                     removeUnitFromBoard(enemy);
                 }
@@ -119,10 +104,9 @@ public class Game {
 
         }
 
-
     }
 
-    private void removeUnitFromBoard(GameUnit unit){
+    private void removeUnitFromBoard(GameUnit unit) {
         int posX = unit.getPosition().getX();
         int posY = unit.getPosition().getY();
 
@@ -134,7 +118,7 @@ public class Game {
         int userPosX = chosen.getPosition().getX();
         int userPosY = chosen.getPosition().getY();
 
-        for (Enemy enemy : currEnemies){
+        for (Enemy enemy : currEnemies) {
             int enemyPosX = enemy.getPosition().getX();
             int enemyPosY = enemy.getPosition().getY();
 
@@ -144,35 +128,32 @@ public class Game {
         return false;
     }
 
-=======
-
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
     private void get_User_MoveAndApply() {
         char playerMove = ui.getMoveFromUser();
         switch (playerMove) {
-            // up
-            case 'w':
-                attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
-                break;
-            // down
-            case 's': {
-                attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
-                break;
-            }
-            // left
-            case 'a':
-                attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
-                break;
-            // right
-            case 'd':
-                attemptMove(chosen.getPosition().getRight(), chosen.getPosition());
-                break;
-            // special ability
-            case 'e':
-                break;
-            // do nothing
-            case 'q':
-                break;
+        // up
+        case 'w':
+            attemptMove(chosen.getPosition().getUp(), chosen.getPosition());
+            break;
+        // down
+        case 's': {
+            attemptMove(chosen.getPosition().getDown(), chosen.getPosition());
+            break;
+        }
+        // left
+        case 'a':
+            attemptMove(chosen.getPosition().getLeft(), chosen.getPosition());
+            break;
+        // right
+        case 'd':
+            attemptMove(chosen.getPosition().getRight(), chosen.getPosition());
+            break;
+        // special ability
+        case 'e':
+            break;
+        // do nothing
+        case 'q':
+            break;
         }
     }
 
@@ -193,130 +174,86 @@ public class Game {
     }
 
     public void initBoardUnits() {
-<<<<<<< HEAD
         enemiesCounter = 0;
 
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
         for (int x = 0; x < board.length; x++) {
             for (int y = 0; y < board[x].length; y++) {
                 switch (board[x][y]) {
-                    case 's':
-                        Monster lannister_solider = new Monster("Lannister Solider", 80, 8, 3, new Position(x, y), 25, 's', 3);
-                        currEnemies.add(lannister_solider);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 's':
+                    Monster lannister_solider = new Monster("Lannister Solider", 80, 8, 3, new Position(x, y), 25, 's',
+                            3);
+                    currEnemies.add(lannister_solider);
+                    enemiesCounter++;
+                    break;
 
-                    case 'k':
-                        Monster lannister_knight = new Monster("Lannister Knight", 200, 14, 8, new Position(x, y), 50, 'k', 4);
-                        currEnemies.add(lannister_knight);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'k':
+                    Monster lannister_knight = new Monster("Lannister Knight", 200, 14, 8, new Position(x, y), 50, 'k',
+                            4);
+                    currEnemies.add(lannister_knight);
+                    enemiesCounter++;
+                    break;
 
-                    case 'q':
-                        Monster queens_guard = new Monster("Queens Guard", 400, 20, 15, new Position(x, y), 100, 'q', 5);
-                        currEnemies.add(queens_guard);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'q':
+                    Monster queens_guard = new Monster("Queens Guard", 400, 20, 15, new Position(x, y), 100, 'q', 5);
+                    currEnemies.add(queens_guard);
+                    enemiesCounter++;
+                    break;
 
-                    case 'z':
-                        Monster wright = new Monster("Wright", 600, 30, 15, new Position(x, y), 100, 'z', 3);
-                        currEnemies.add(wright);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'z':
+                    Monster wright = new Monster("Wright", 600, 30, 15, new Position(x, y), 100, 'z', 3);
+                    currEnemies.add(wright);
+                    enemiesCounter++;
+                    break;
 
-                    case 'b':
-                        Monster bear_wright = new Monster("Bear-Wright", 1000, 75, 30, new Position(x, y), 250, 'b', 4);
-                        currEnemies.add(bear_wright);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'b':
+                    Monster bear_wright = new Monster("Bear-Wright", 1000, 75, 30, new Position(x, y), 250, 'b', 4);
+                    currEnemies.add(bear_wright);
+                    enemiesCounter++;
+                    break;
 
-                    case 'g':
-                        Monster giant_wright = new Monster("Giant-Wright", 1500, 100, 40, new Position(x, y), 500, 'g', 5);
-                        currEnemies.add(giant_wright);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'g':
+                    Monster giant_wright = new Monster("Giant-Wright", 1500, 100, 40, new Position(x, y), 500, 'g', 5);
+                    currEnemies.add(giant_wright);
+                    enemiesCounter++;
+                    break;
 
-                    case 'w':
-                        Monster white_walker = new Monster("White Walker", 2000, 150, 50, new Position(x, y), 1000, 'w', 6);
-                        currEnemies.add(white_walker);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'w':
+                    Monster white_walker = new Monster("White Walker", 2000, 150, 50, new Position(x, y), 1000, 'w', 6);
+                    currEnemies.add(white_walker);
+                    enemiesCounter++;
+                    break;
 
-                    case 'M':
-                        Monster the_mountain = new Monster("The Mountain", 1000, 60, 25, new Position(x, y), 500, 'M', 6);
-                        currEnemies.add(the_mountain);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'M':
+                    Monster the_mountain = new Monster("The Mountain", 1000, 60, 25, new Position(x, y), 500, 'M', 6);
+                    currEnemies.add(the_mountain);
+                    Monster queen_cersei = new Monster("Queen Cersei", 100, 10, 10, new Position(x, y), 1000, 'C', 1);
+                    currEnemies.add(queen_cersei);
+                    enemiesCounter++;
+                    break;
 
-                    case 'C':
-                        Monster queen_cersei = new Monster("Queen Cersei", 100, 10, 10, new Position(x, y), 1000, 'C', 1);
-                        currEnemies.add(queen_cersei);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'K':
+                    Monster nights_king = new Monster("Night's King", 5000, 300, 150, new Position(x, y), 5000, 'K', 8);
+                    currEnemies.add(nights_king);
+                    enemiesCounter++;
+                    break;
 
-                    case 'K':
-                        Monster nights_king = new Monster("Night's King", 5000, 300, 150, new Position(x, y), 5000, 'K', 8);
-                        currEnemies.add(nights_king);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'B':
+                    Trap bonus_trap = new Trap("Bonus \"Trap\"", 1, 1, 1, new Position(x, y), 250, 'B', 5, 6, 2);
+                    currEnemies.add(bonus_trap);
+                    enemiesCounter++;
+                    break;
 
-                    case 'B':
-                        Trap bonus_trap = new Trap("Bonus \"Trap\"", 1, 1, 1, new Position(x, y), 250, 'B', 5, 6, 2);
-                        currEnemies.add(bonus_trap);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'Q':
+                    Trap queens_trap = new Trap("Queen's Trap", 250, 50, 10, new Position(x, y), 100, 'Q', 4, 10, 4);
+                    currEnemies.add(queens_trap);
+                    enemiesCounter++;
+                    break;
 
-                    case 'Q':
-                        Trap queens_trap = new Trap("Queen's Trap", 250, 50, 10, new Position(x, y), 100, 'Q', 4, 10, 4);
-                        currEnemies.add(queens_trap);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
-
-                    case 'D':
-                        Trap death_trap = new Trap("Death Trap", 500, 100, 20, new Position(x, y), 250, 'D', 6, 10, 3);
-                        currEnemies.add(death_trap);
-<<<<<<< HEAD
-                        enemiesCounter++;
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
-                        break;
+                case 'D':
+                    Trap death_trap = new Trap("Death Trap", 500, 100, 20, new Position(x, y), 250, 'D', 6, 10, 3);
+                    currEnemies.add(death_trap);
+                    enemiesCounter++;
+                    break;
                 }
             }
         }
@@ -326,10 +263,7 @@ public class Game {
         for (Enemy enemy : currEnemies) {
             int moveNum = enemy.turn(chosen.getPosition());
             updateEnemyPosition(enemy, moveNum);
-<<<<<<< HEAD
             fightIfCombat(enemy); // NIR: Need to check this line
-=======
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
         }
     }
 
@@ -339,48 +273,40 @@ public class Game {
         Position currPosition = gameUnit.getPosition();
 
         switch (moveNum) {
-            case 1:
-                newPosition = currPosition.getLeft();
-                break;
-            case 2:
-                newPosition = currPosition.getRight();
-                break;
-            case 3:
-                newPosition = currPosition.getUp();
-                break;
-            case 4:
-                newPosition = currPosition.getDown();
-                break;
-            default:
-                return;
+        case 1:
+            newPosition = currPosition.getLeft();
+            break;
+        case 2:
+            newPosition = currPosition.getRight();
+            break;
+        case 3:
+            newPosition = currPosition.getUp();
+            break;
+        case 4:
+            newPosition = currPosition.getDown();
+            break;
+        default:
+            return;
         }
 
         if (newPosition.inBounds() && currPosition.inBounds()) {
             switch (board[newPosition.getX()][newPosition.getY()]) {
-                case '.': {
-                    char gameUnitTile = board[currPosition.getX()][currPosition.getY()];
-                    gameUnit.setPosition(newPosition);
-                    board[newPosition.getX()][newPosition.getY()] = gameUnitTile;
-                    board[currPosition.getX()][currPosition.getY()] = '.';
-                    break;
-                }
-                case '#':
-                    break;
-                case '@':
-                    break;
+            case '.': {
+                char gameUnitTile = board[currPosition.getX()][currPosition.getY()];
+                gameUnit.setPosition(newPosition);
+                board[newPosition.getX()][newPosition.getY()] = gameUnitTile;
+                board[currPosition.getX()][currPosition.getY()] = '.';
+                break;
+            }
+            case '#':
+                break;
+            case '@':
+                break;
             }
         } else {
-            System.out.println("OUT OF BOUNDS "); //NIR
+            System.out.println("OUT OF BOUNDS "); // NIR
         }
     }
-
-
-
-
-
-
-
-
 
     // ----------------------------- DEBUG HELPERS ----------------------------
 
@@ -392,7 +318,6 @@ public class Game {
             System.out.print('\n');
         }
         System.out.println("- - - - - - - - - DEBUG END - - - - - - - - -\n");
-<<<<<<< HEAD
     }
 
     public void printCell(int x, int y, String message) {
@@ -400,20 +325,9 @@ public class Game {
         System.out.println("{ " + message + " } | (" + x + "," + y + ") content: " + content);
     }
 
-=======
-    }
-
-    public void printCell(int x, int y, String message) {
-        char content = board[x][y];
-        System.out.println("{ " + message + " } | (" + x + "," + y + ") content: " + content);
-    }
-
->>>>>>> 0c3464ef78d8fa5443a17680e0c9cd07ffa8bd8e
     public void printCell(Position pos, String message) {
         char content = board[pos.getX()][pos.getY()];
         System.out.println("{ " + message + " } | (" + pos.getX() + "," + pos.getY() + ") content: " + content);
     }
 
-
 }
-
