@@ -11,6 +11,6 @@ public abstract class Enemy extends GameUnit {
     }
 
     // stay - 0, left - 1, right - 2, up - 3, down - 4
-    public abstract int turn(Position playerPos);
+    public abstract int turn(Position playerPos, Game game);
 
 }

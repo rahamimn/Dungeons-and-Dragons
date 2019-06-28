@@ -1,7 +1,8 @@
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Trap extends Enemy {
 
-	
 	private int relocationRange;
 	private int relocationTime;
 	private int visibilityTime;
@@ -17,16 +18,37 @@ public class Trap extends Enemy {
 	}
 
 	@Override
-	public int turn(Position playerPos) {
+	public int turn(Position playerPos, Game game) {
+		char[][] board = game.getBoard();
 		if (this.ticksCount == this.relocationTime){
 			this.ticksCount = 0;
-			//find all free position within relocation range
-			//select random set trap
+			System.out.println("inside turn()");
+			ArrayList list = getAllFreePositionsInRange(this.getPosition(), this.relocationRange, board);
+			game.setBoard(relocateRandomly(list, board));
 		}
 		else{
 			this.ticksCount++;
 			if(range(playerPos) < 2){
-				//engage in melee combat with player
+				System.out.println("Trap fight!");
+				int userAttackPts = game.getChosen().rollAttackForCombat();
+				System.out.println("userAttackPts = " + userAttackPts);
+
+				int enemyDefensePts = this.rollDefenseForCombat();
+				System.out.println("enemyDefensePts = " + enemyDefensePts);
+
+				int diff = userAttackPts - enemyDefensePts;
+
+				System.out.println("Health before = " + this.getHealth());
+				if (diff > 0) {
+					this.decHealth(diff); // diff is negative
+					System.out.println("Health after = " + this.getHealth());
+					if (this.getHealth() <= 0) {
+						game.getChosen().decExperience(0-diff); // diff is negative
+						char[][] newBoard = game.removeUnitFromBoard(this);
+						game.setBoard(newBoard);
+					}
+				}
+
 			}
 		}
 		
@@ -39,6 +61,55 @@ public class Trap extends Enemy {
 		//delete after
 		return -1;
 	}
+
+
+
+	//------------------- helpers
+	public ArrayList<Position> getAllFreePositionsInRange(Position pos, int range, char[][] board) {
+		ArrayList list = new ArrayList();
+		double currRange;
+
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[x].length; y++) {
+				currRange = Math.sqrt(Math.pow(pos.getX() - x, 2) + Math.pow(pos.getY() - y, 2));
+
+				if (range - currRange >= 0) {
+					Position currPosition = new Position(x, y);
+
+					if (currPosition.inBounds() && board[x][y] == '.') {
+						list.add(currPosition);
+					}
+				}
+			}
+		}
+		return list;
+	}
+
+	public char[][] relocateRandomly(ArrayList<Position>list, char[][] board){
+
+		System.out.println("Old Position = " + this.getPosition().getX() + "," + this.getPosition().getY());
+		int index = getRandomNumberInRange(0, list.size()-1);
+		Position currPosition = this.getPosition();
+		Position newPosition = list.get(index);
+		this.setPosition(newPosition);
+		System.out.println("New Position = " + this.getPosition().getX() + "," + this.getPosition().getY());
+		char tile = board[currPosition.getX()][currPosition.getY()];
+		board[newPosition.getX()][newPosition.getY()] = tile;
+		board[currPosition.getX()][currPosition.getY()] = '.';
+
+		return board;
+	}
+
+	private static int getRandomNumberInRange(int min, int max) {
+
+		if (min >= max) {
+			throw new IllegalArgumentException("max must be greater than min");
+		}
+
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
+	}
+
 	
 
 }

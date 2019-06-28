@@ -9,6 +9,8 @@ public class Game {
     private ArrayList<Enemy> currEnemies;
     private UserInterface ui = new UserInterface();
     boolean gameNotOver;
+    int enemiesCounter = 0; //NIR: TODO: change initialization location
+
 
     public void initGameUnits() {
 
@@ -38,19 +40,47 @@ public class Game {
 
     // stay - 0, left - 1, right - 2, up - 3, down - 4
     public void attemptMove(Position newPosition, Position currPosition) {
+        //System.out.println("inside attemptMove_1");
         if (newPosition.inBounds()) {
+            //System.out.println("inside attemptMove_2");
             switch (board[newPosition.getX()][newPosition.getY()]) {
-            case '.': {
-                chosen.setPosition(newPosition);
-                board[newPosition.getX()][newPosition.getY()] = '@';
-                board[currPosition.getX()][currPosition.getY()] = '.';
-                break;
-            }
-            case '#':
-                break;
-            case '@':
-                break;
-            }
+                case '.': {
+                    chosen.setPosition(newPosition);
+                    board[newPosition.getX()][newPosition.getY()] = '@';
+                    board[currPosition.getX()][currPosition.getY()] = '.';
+                    break;
+                }
+                case '#':
+                    break;
+                case '@':
+                    break;
+
+                default: {
+                 //   System.out.println("in default");
+                    Enemy enemy = getEnemyAtPosition(newPosition);
+                    if (enemy == null){
+                        System.out.println("Enemy is null");
+                        return;
+                    }
+                            System.out.println("FIGHT!");
+                            int userAttackPts = chosen.rollAttackForCombat();
+                            int enemyDefensePts = enemy.rollDefenseForCombat();
+                            int diff = userAttackPts - enemyDefensePts;
+                            if (diff > 0){
+                                System.out.println("enemy.getHealth() = " + enemy.getHealth());
+                                enemy.decHealth(diff);
+                                System.out.println("now health is  = " + enemy.getHealth());
+                                if (enemy.getHealth() <= 0) {
+                                    System.out.println("Health is over");
+                                    chosen.decExperience(0-diff); // diff is negative
+                                    this.board = removeUnitFromBoard(enemy);
+                            }
+                        }
+                            else{
+                                System.out.println("No damage happend");
+                            }
+                    }
+                }
         } else {
             System.out.println("OUT OF BOUNDS "); // NIR
         }
@@ -68,8 +98,6 @@ public class Game {
             while (gameNotOver) {
                 printCurrBoard();
                 get_User_MoveAndApply();
-                /* TODO: fightIfCombat() */;
-                // fightIfCombat(enemy);
                 get_Enemies_MoveAndApply();
 
                 /**
@@ -90,7 +118,6 @@ public class Game {
             System.out.println("FIGHT!");
             int userAttackPts = chosen.rollAttackForCombat();
             int enemyDefensePts = enemy.rollDefenseForCombat();
-
             int diff = userAttackPts - enemyDefensePts;
 
             if (diff > 0) {
@@ -106,15 +133,24 @@ public class Game {
 
     }
 
-    private void removeUnitFromBoard(GameUnit unit) {
+    public char[][] removeUnitFromBoard(GameUnit unit) {
         int posX = unit.getPosition().getX();
         int posY = unit.getPosition().getY();
 
-        board[posX][posY] = '.';
+        char[][] newBoard = this.board;
+        newBoard[posX][posY] = '.';
+
+        System.out.println("before: currEnemies.size() = " + currEnemies.size());
+        currEnemies.removeIf(obj->((obj.getPosition().getX()==posX) && (obj.getPosition().getY()==posY)));
+        System.out.println("after: currEnemies.size() = " + currEnemies.size());
+
         enemiesCounter--;
+
+        return newBoard;
     }
 
     private boolean hasCombat() {
+
         int userPosX = chosen.getPosition().getX();
         int userPosY = chosen.getPosition().getY();
 
@@ -122,8 +158,10 @@ public class Game {
             int enemyPosX = enemy.getPosition().getX();
             int enemyPosY = enemy.getPosition().getY();
 
-            if (enemyPosX == userPosX && enemyPosY == userPosY)
+
+            if ((enemyPosX == userPosX) && (enemyPosY == userPosY)){
                 return true;
+            }
         }
         return false;
     }
@@ -155,6 +193,9 @@ public class Game {
         case 'q':
             break;
         }
+
+
+
     }
 
     private void printCurrBoard() {
@@ -194,7 +235,8 @@ public class Game {
                     break;
 
                 case 'q':
-                    Monster queens_guard = new Monster("Queens Guard", 400, 20, 15, new Position(x, y), 100, 'q', 5);
+                    Monster queens_guard = new Monster("Queens Guard", 100, 20, 15, new Position(x, y), 100, 'q', 5);
+                    //TODO: nir: change health to 400!!!!
                     currEnemies.add(queens_guard);
                     enemiesCounter++;
                     break;
@@ -261,7 +303,7 @@ public class Game {
 
     public void get_Enemies_MoveAndApply() throws Exception {
         for (Enemy enemy : currEnemies) {
-            int moveNum = enemy.turn(chosen.getPosition());
+            int moveNum = enemy.turn(chosen.getPosition(), this);
             updateEnemyPosition(enemy, moveNum);
             fightIfCombat(enemy); // NIR: Need to check this line
         }
@@ -308,6 +350,23 @@ public class Game {
         }
     }
 
+    public Enemy getEnemyAtPosition(Position pos){
+
+        for (Enemy enemy : currEnemies) {
+
+            int enemyPosX = enemy.getPosition().getX();
+            int enemyPosY = enemy.getPosition().getY();
+
+            if ((enemyPosX == pos.getX()) && (enemyPosY == pos.getY())){
+                return enemy;
+            }
+
+        }
+        return null;
+    }
+
+
+
     // ----------------------------- DEBUG HELPERS ----------------------------
 
     public void printBoardDebug(char[][] board) {
@@ -328,6 +387,18 @@ public class Game {
     public void printCell(Position pos, String message) {
         char content = board[pos.getX()][pos.getY()];
         System.out.println("{ " + message + " } | (" + pos.getX() + "," + pos.getY() + ") content: " + content);
+    }
+
+    public void setBoard(char[][] board){
+        this.board = board;
+    }
+
+    public char[][] getBoard(){
+        return this.board;
+    }
+
+    public Player getChosen(){
+        return chosen;
     }
 
 }

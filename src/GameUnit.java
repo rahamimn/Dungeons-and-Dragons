@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public abstract class GameUnit {
 
     private String name;
@@ -38,13 +40,11 @@ public abstract class GameUnit {
     }
 
     public int rollAttackForCombat() {
-        // need to figure out hoe to send the random genertator
-        return 0;
+        return getRandomNumberInRange(0, getAttack());
     }
 
     public int rollDefenseForCombat() {
-        // need to figure out hoe to send the random genertator
-        return 0;
+        return getRandomNumberInRange(0, getDefense());
     }
 
     public String getName() {
@@ -76,6 +76,16 @@ public abstract class GameUnit {
         }
 
         this.currentHealth = newHealth;
+    }
+
+    private static int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 
 }
