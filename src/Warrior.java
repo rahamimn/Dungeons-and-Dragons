@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Warrior extends Player{
 
@@ -11,10 +12,11 @@ public class Warrior extends Player{
 	}
 
 	// heal
-	public boolean castSpecialAbility(){
+	public boolean castSpecialAbility(ArrayList<Enemy> enemies){
 		if (this.remaining > 0){
 			return false;
 		}
+		this.remaining = cooldown;
 		int inc = Math.min(this.currentHealth + 2 * this.defensePoints, this.healthPool);
 		this.currentHealth += inc;
 		return true;

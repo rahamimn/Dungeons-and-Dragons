@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public abstract class Player extends GameUnit{
 
@@ -12,7 +13,7 @@ public abstract class Player extends GameUnit{
 		this.level = 1;
 	}
 	
-	public abstract boolean castSpecialAbility();
+	public abstract boolean castSpecialAbility(ArrayList<Enemy> enemies);
 	
 	public abstract void gameTickUpdate();
 	

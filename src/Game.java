@@ -10,10 +10,16 @@ public class Game {
     private UserInterface ui = new UserInterface();
     boolean gameNotOver;
     int enemiesCounter = 0; //NIR: TODO: change initialization location
+    boolean isNextLevel = false;
+    static RandomGenerator randomGenerator;
+    static int i;
+
+
 
 
     public void initGameUnits() {
 
+        i = 0; // nir: to delete this
         players = new ArrayList<Player>();
         currEnemies = new ArrayList<Enemy>();
 
@@ -63,8 +69,8 @@ public class Game {
                         return;
                     }
                             System.out.println("FIGHT!");
-                            int userAttackPts = chosen.rollAttackForCombat();
-                            int enemyDefensePts = enemy.rollDefenseForCombat();
+                            int userAttackPts = chosen.rollAttackForCombat(randomGenerator, i);
+                            int enemyDefensePts = enemy.rollDefenseForCombat(randomGenerator, i);
                             int diff = userAttackPts - enemyDefensePts;
                             if (diff > 0){
                                 System.out.println("enemy.getHealth() = " + enemy.getHealth());
@@ -74,6 +80,15 @@ public class Game {
                                     System.out.println("Health is over");
                                     chosen.decExperience(0-diff); // diff is negative
                                     this.board = removeUnitFromBoard(enemy);
+
+                                    chosen.setPosition(newPosition);
+                                    board[newPosition.getX()][newPosition.getY()] = '@';
+                                    board[currPosition.getX()][currPosition.getY()] = '.';
+
+                                    if (enemiesCounter <=0 ){
+                                        isNextLevel = true;
+                                    }
+
                             }
                         }
                             else{
@@ -86,29 +101,30 @@ public class Game {
         }
     }
 
-    public void start() throws Exception {
+    public void start(RandomGenerator randomGenerator) throws Exception {
 
+        this.randomGenerator = randomGenerator;
         userSelectPlayer();
 
         for (char[][] currBoard : gameBoards) { // Every currBoard is a new level
-            initCurrLevelBoard(currBoard);
-            initUserPlayer();
-            initBoardUnits();
+            if (gameNotOver) {
 
-            while (gameNotOver) {
-                printCurrBoard();
-                get_User_MoveAndApply();
-                get_Enemies_MoveAndApply();
+                isNextLevel = false;
+                initCurrLevelBoard(currBoard);
+                initUserPlayer();
+                initBoardUnits();
 
-                /**
-                 * TODO:
-                 *
-                 * if (isGameOver()){ // Do stuff return; }
-                 * 
-                 * if (isNextLevel){ // Do stuff break;
-                 */
+                while (gameNotOver) {
+                    printCurrBoard();
+                    get_User_MoveAndApply();
+                    if (isNextLevel)
+                        break;
+                    get_Enemies_MoveAndApply();
+                }
             }
         }
+        System.out.println("Game Over!");
+        printCurrBoard();
     }
 
     private void fightIfCombat(Enemy enemy) {
@@ -116,8 +132,8 @@ public class Game {
         // TODO: finish this
         if (hasCombat()) {
             System.out.println("FIGHT!");
-            int userAttackPts = chosen.rollAttackForCombat();
-            int enemyDefensePts = enemy.rollDefenseForCombat();
+            int userAttackPts = chosen.rollAttackForCombat(randomGenerator, i);
+            int enemyDefensePts = enemy.rollDefenseForCombat(randomGenerator, i);
             int diff = userAttackPts - enemyDefensePts;
 
             if (diff > 0) {
@@ -188,6 +204,7 @@ public class Game {
             break;
         // special ability
         case 'e':
+            chosen.castSpecialAbility(currEnemies);
             break;
         // do nothing
         case 'q':
@@ -221,7 +238,7 @@ public class Game {
             for (int y = 0; y < board[x].length; y++) {
                 switch (board[x][y]) {
                 case 's':
-                    Monster lannister_solider = new Monster("Lannister Solider", 80, 8, 3, new Position(x, y), 25, 's',
+                    Monster lannister_solider = new Monster("Lannister Solider", 80, 80, 3, new Position(x, y), 25, 's', // nir: todo: change attack back to '8'
                             3);
                     currEnemies.add(lannister_solider);
                     enemiesCounter++;
@@ -303,7 +320,7 @@ public class Game {
 
     public void get_Enemies_MoveAndApply() throws Exception {
         for (Enemy enemy : currEnemies) {
-            int moveNum = enemy.turn(chosen.getPosition(), this);
+            int moveNum = enemy.turn(chosen.getPosition(), this, randomGenerator, i);
             updateEnemyPosition(enemy, moveNum);
             fightIfCombat(enemy); // NIR: Need to check this line
         }
@@ -316,16 +333,20 @@ public class Game {
 
         switch (moveNum) {
         case 1:
-            newPosition = currPosition.getLeft();
+            //newPosition = currPosition.getLeft();
+            newPosition = currPosition.getRight();
             break;
         case 2:
             newPosition = currPosition.getRight();
             break;
         case 3:
-            newPosition = currPosition.getUp();
+            //newPosition = currPosition.getUp();
+            newPosition = currPosition.getRight();
             break;
         case 4:
-            newPosition = currPosition.getDown();
+//            newPosition = currPosition.getDown();
+            newPosition = currPosition.getRight();
+
             break;
         default:
             return;
@@ -343,6 +364,26 @@ public class Game {
             case '#':
                 break;
             case '@':
+
+                System.out.println("Enemy attacks!");
+                int userAttackPts = gameUnit.rollAttackForCombat(randomGenerator, i);
+                int enemyDefensePts = chosen.rollDefenseForCombat(randomGenerator, i);
+                int diff = userAttackPts - enemyDefensePts;
+                if (diff > 0){
+                    System.out.println("chosen.getHealth() = " + chosen.getHealth());
+                    chosen.decHealth(diff);
+                    System.out.println("chosen now health is  = " + chosen.getHealth());
+                    if (chosen.getHealth() <= 0) {
+                        System.out.println("Health is over");
+                        chosen.decExperience(0-diff); // diff is negative
+                        board[newPosition.getX()][newPosition.getY()] = 'X';
+                        gameNotOver = false;
+                        return;
+                    }
+                }
+                else{
+                    System.out.println("No damage happened");
+                }
                 break;
             }
         } else {

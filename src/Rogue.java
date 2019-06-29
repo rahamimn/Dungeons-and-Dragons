@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Rogue extends Player {
@@ -19,7 +20,7 @@ public class Rogue extends Player {
 	}
 
 	@Override
-	public boolean castSpecialAbility() {
+	public boolean castSpecialAbility(ArrayList<Enemy> enemies) {
 		if (this.currentEnergy < this.cost)
 			return false;
 		this.currentEnergy -= this.cost;

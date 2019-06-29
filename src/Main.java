@@ -34,13 +34,22 @@ public class Main {
             }
         }
 
+        RandomGenerator num_generator = null;
+        ActionReader action_generator = null;
         /** Get game actions */
-        if (is_deterministic) {
-            RandomGenerator num_generator = new DeterministicNums("user_input.txt");
-            ActionReader action_generator = new DeterministicActions("random_numbers.txt");
+        if (is_deterministic) { // nir; todo; remove the '!'
+            num_generator = new DeterministicNums("src/random_numbers.txt"); // nir; todo: handle this path
+            action_generator = new DeterministicActions("src/user_actions.txt");
+
+            System.out.println("DETERMINISTIC num_generator = " + num_generator.nextInt(100));
+            System.out.println("DETERMINISTIC action_generator = " + action_generator.nextAction());
         } else {
-            //RandomGenerator num_generator = new RandomGeneratorImpl();
-            ActionReader action_generator = new ActionReaderImpl();
+            num_generator = new RandomGeneratorImpl();
+            action_generator = new ActionReaderImpl();
+
+            System.out.println("num_generator = " + num_generator.nextInt(100));
+            System.out.println("action_generator = " + action_generator.nextAction());
+
         }
 
         /** Sort level files by number */
@@ -53,7 +62,7 @@ public class Main {
 
         ArrayList gameBoards = createGameBoards(list);
         Game game = new Game(gameBoards);
-        game.start();
+        game.start(num_generator);
     }
 
 

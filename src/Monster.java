@@ -13,7 +13,7 @@ public class Monster extends Enemy {
 
     // stay - 0, left - 1, right - 2, up - 3, down - 4
     @Override
-    public int turn(Position playerPos, Game game) {
+    public int turn(Position playerPos, Game game, RandomGenerator randomGenerator, int i) {
 
         if (range(playerPos) < this.visionRange) {
 
@@ -39,11 +39,9 @@ public class Monster extends Enemy {
                 }
             }
         } else {
-            Random random = new Random();
-            int randomNum = random.nextInt(4) + 1;
 
-            //System.out.println("Enemy move = Random (" + randomNum + ")"); // NIR
-            return 4;
+            return randomGenerator.nextInt(4); // NIR: TODO; add 5th movement = stay
+
         }
 
     }

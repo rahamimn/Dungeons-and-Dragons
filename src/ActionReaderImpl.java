@@ -6,7 +6,7 @@ public class ActionReaderImpl implements ActionReader {
 	private Scanner scanner;
 	
 	public ActionReaderImpl(){
-		Scanner scanner = new Scanner(System.in);
+		scanner = new Scanner(System.in);
 	}
 	
 	@Override

@@ -39,12 +39,20 @@ public abstract class GameUnit {
         this.position.setY(newPos.getY());
     }
 
-    public int rollAttackForCombat() {
-        return getRandomNumberInRange(0, getAttack());
+    public int rollAttackForCombat(RandomGenerator randomGenerator, int i) {
+        System.out.println(++i);
+        int value = randomGenerator.nextInt(getAttack());
+        System.out.println("randomGenerator ATTACK = " + value);
+        return value;
+        //return getRandomNumberInRange(0, getAttack());
     }
 
-    public int rollDefenseForCombat() {
-        return getRandomNumberInRange(0, getDefense());
+    public int rollDefenseForCombat(RandomGenerator randomGenerator, int i) {
+        System.out.println(++i);
+        int value = randomGenerator.nextInt(getDefense());
+        System.out.println("randomGenerator Defense = " + value);
+        return value;
+        // return getRandomNumberInRange(0, getDefense());
     }
 
     public String getName() {

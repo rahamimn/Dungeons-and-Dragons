@@ -6,7 +6,7 @@ public class RandomGeneratorImpl implements RandomGenerator  {
 	
 	private Random rand;
 	
-	private RandomGeneratorImpl(){
+	public RandomGeneratorImpl(){
 		rand = new Random();
 	}
 	

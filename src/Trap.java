@@ -18,7 +18,7 @@ public class Trap extends Enemy {
 	}
 
 	@Override
-	public int turn(Position playerPos, Game game) {
+	public int turn(Position playerPos, Game game, RandomGenerator randomGenerator, int i) {
 		char[][] board = game.getBoard();
 		if (this.ticksCount == this.relocationTime){
 			this.ticksCount = 0;
@@ -30,10 +30,10 @@ public class Trap extends Enemy {
 			this.ticksCount++;
 			if(range(playerPos) < 2){
 				System.out.println("Trap fight!");
-				int userAttackPts = game.getChosen().rollAttackForCombat();
+				int userAttackPts = game.getChosen().rollAttackForCombat(randomGenerator, i);
 				System.out.println("userAttackPts = " + userAttackPts);
 
-				int enemyDefensePts = this.rollDefenseForCombat();
+				int enemyDefensePts = this.rollDefenseForCombat(randomGenerator, i);
 				System.out.println("enemyDefensePts = " + enemyDefensePts);
 
 				int diff = userAttackPts - enemyDefensePts;
