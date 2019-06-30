@@ -14,6 +14,7 @@ public class DeterministicNums implements RandomGenerator {
 
 	private ArrayList<String> nums;
 	private int index;
+
 	
 	public DeterministicNums(String path) throws IOException{
 		
@@ -28,6 +29,7 @@ public class DeterministicNums implements RandomGenerator {
 			index = 0;
 		else
 			index++;
+
 		return to_ret;
 	}
 

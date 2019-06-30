@@ -5,8 +5,8 @@ public abstract class Player extends GameUnit{
 	// Player additional fields
 	private int experience;  // increased by killing enemies
 	private int level;       // increased by gaining experience
-	
-	
+
+
 	public Player(String name, int health, int attackPoints, int defensePoints, Position position, RandomGenerator srandomGenerator) {
 		super(name, health, attackPoints, defensePoints, position, srandomGenerator);
 		this.experience = 0;
@@ -24,7 +24,6 @@ public abstract class Player extends GameUnit{
 		this.currentHealth = this.healthPool;
 		incAttack(5);
 		incDefense(2);
-		
 	}
 	
 	protected int getLevel(){
@@ -51,12 +50,10 @@ public abstract class Player extends GameUnit{
 		String base = super.unitStr();
 		return base + "\tLevel: "+ this.getLevel() + "\tExperience: " + this.getExperience() + "/50";
 	}
-
 	
 	public String levelUpStr(){
 		return "Level up: +" + 10 * this.getLevel() + " Health, +" + 5 * this.getLevel() + " Attack, +" + 2 * this.getLevel()+ " Defense";
 	}
-	
 	
 	public boolean meleeCombatUser(Enemy defender, Position newPosition, Position currPosition) {
 
@@ -76,7 +73,6 @@ public abstract class Player extends GameUnit{
 		} 
 		ui.printCombat(this, defender, userAttackPts, enemyDefensePts, 0);
 		return false;
-
 	}
 	
 	  public void incExperience(int n){

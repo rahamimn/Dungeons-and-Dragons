@@ -21,14 +21,12 @@ public class Mage extends Player {
 		this.range = range;
 	}
 
-	
 	public void levelUp(){
 		super.levelUp();
 		this.manaPool += 25 * this.getLevel();
 		this.currentMana = Math.min(currentMana + (manaPool / 4), manaPool);
 		this.spellPower += 10 * this.getLevel();
 	}
-	
 	
 	@Override
 	// blizzard
@@ -110,17 +108,5 @@ public class Mage extends Player {
 		String base = super.levelUpStr();
 		return base + "\n+" + 25 * this.getLevel() + " maximum mana, +" + 10 * this.getLevel() + " spell power";
 	}
-
-//	//---------------- nir: to delete
-//	private static int getRandomNumberInRange(int min, int max) {
-//
-//		if (min >= max) {
-//			throw new IllegalArgumentException("max must be greater than min");
-//		}
-//
-//		Random r = new Random();
-//		return r.nextInt((max - min) + 1) + min;
-//	}
-
 
 }

@@ -18,13 +18,6 @@ public class UserInterface {
 		System.out.println("Use w/s/a/d to move.\nUse e for special ability or q to pass.");
 		return players.get(choice-1);
 	}
-	
-//	public char getMoveFromUser(){
-//		Scanner sc = new Scanner(System.in);
-//		char move = sc.next().charAt(0);
-//		return move;
-//	}
-	
 
 	public void printBoard(char[][] board, Player player){
 		for(int i = 0; i < board.length; i++){
@@ -32,6 +25,7 @@ public class UserInterface {
 				System.out.print(board[i][j]);
 			System.out.print('\n');
 		}
+		System.out.print("\n \n");
 		System.out.println(player.unitStr());
 	}
 
@@ -39,9 +33,9 @@ public class UserInterface {
 		System.out.println(attacker.getName() + " engaged in battle with " + defender.getName());
 		System.out.println(attacker.unitStr());
 		System.out.println(defender.unitStr());
-		System.out.println(attacker.getName() + "rolled "+ attackPoints + " attack points.");
-		System.out.println(defender.getName() + "rolled "+ defensePoints + " defense points.");
-		System.out.println(attacker.getName() + "hit "+ defender.getName() + " for " + damage + "damage.");
+		System.out.println(attacker.getName() + " rolled "+ attackPoints + " attack points.");
+		System.out.println(defender.getName() + " rolled "+ defensePoints + " defense points.");
+		System.out.println(attacker.getName() + " hit "+ defender.getName() + " for " + damage + "damage.");
 		
 	}
 
@@ -55,12 +49,6 @@ public class UserInterface {
 		}
 		throw new NullPointerException("No user player on board");
 	}
-
-	public void printLevelUp(Player player){
-		System.out.println(player.levelUpStr());
-	}
-	
-	
 
 	public void printSpecial(Player player, Enemy enemy, int spellPower, int enemyDefensePts, int diff) {
 		System.out.println("cast special ability");

@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,13 +19,11 @@ public class Main {
 
         /** Get all level files */
 		File folder = new File(args[0]);
-       // File folder = new File(Paths.get("").toAbsolutePath().toString() + "/src");
         File[] listOfFiles = folder.listFiles();
         ArrayList<ArrayList<Object>> list = new ArrayList<ArrayList<Object>>();
 
         for (File file : listOfFiles) {
             if (file.isFile() && file.getName().contains("level")) {
-         //       String level = (file.getName()).charAt(6) + "";
             	String level = (file.getName().substring(6, file.getName().length()-4));
                 ArrayList<Object> map = new ArrayList<>();
                 map.add(Integer.parseInt(level));
@@ -42,7 +39,6 @@ public class Main {
             }
         }
         Collections.sort(list, new MySort());
-        
 
         RandomGenerator num_generator = null;
         ActionReader action_generator = null;
@@ -56,7 +52,6 @@ public class Main {
             action_generator = new ActionReaderImpl();
         }
 
-        
         ArrayList<char[][]> gameBoards = createGameBoards(list);
         Game game = new Game(gameBoards, num_generator, action_generator);
         game.start();
@@ -66,7 +61,6 @@ public class Main {
     public static ArrayList<char[][]> createGameBoards(ArrayList<ArrayList<Object>> boardsFileList) throws IOException {
 
         ArrayList<char[][]> boardsList = new ArrayList<char[][]>();
-
         for (int levelNum = 0; levelNum < boardsFileList.size(); levelNum++) {
             File file = (File) (boardsFileList.get(levelNum)).get(1);
             Scanner sc = new Scanner(file);

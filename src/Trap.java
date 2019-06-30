@@ -7,7 +7,7 @@ public class Trap extends Enemy {
 	private int relocationTime;
 	private int visibilityTime;
 	private int ticksCount;
-	private boolean visible=true;
+	private boolean visible = true;
 
 	public Trap(String name, int health, int attackPoints, int defensePoints, Position position,
 			RandomGenerator randomGenerator, int experience, char tile, int relocationRange, int relocationTime,
@@ -50,6 +50,9 @@ public class Trap extends Enemy {
 		return toret;
 	}
 
+	public boolean isVisible(){
+		return visible;
+	}
 	
 	// ------------------- helpers
 	public ArrayList<Position> getAllFreePositionsInRange(char[][] board) {

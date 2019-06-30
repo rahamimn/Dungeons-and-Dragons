@@ -19,7 +19,6 @@ public abstract class GameUnit {
         this.defensePoints = defensePoints;
         this.position = position;
         this.randomGenerator = randomGenerator;
-        
     }
 
     public double range(Position other) {
@@ -30,12 +29,6 @@ public abstract class GameUnit {
     public Position getPosition() {
         return this.position;
     }
-
-//    public void printPosition(String message) {
-//        int x = this.getPosition().getX();
-//        int y = this.getPosition().getY();
-//        System.out.println("> " + message + " < : (" + x + "," + y + ")");
-//    }
 
     public void setPosition(Position newPos) {
         this.position = new Position(0, 0);
@@ -70,7 +63,7 @@ public abstract class GameUnit {
     }
 
     public String unitStr() {
-        return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack() + "\tDefense: "
+        return this.getName() + "\t\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack() + "\tDefense: "
                 + this.getDefense();
     }
 
@@ -83,17 +76,5 @@ public abstract class GameUnit {
 
         this.currentHealth = newHealth;
     }
-
-//    private static int getRandomNumberInRange(int min, int max) {
-//
-//        if (min >= max) {
-//            throw new IllegalArgumentException("max must be greater than min");
-//        }
-//
-//        Random r = new Random();
-//        return r.nextInt((max - min) + 1) + min;
-//    }
-    
-  
 
 }

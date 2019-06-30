@@ -28,35 +28,34 @@ public class Monster extends Enemy {
 					move = 1;
 				else
 					move = 2;
-			} 
-			else {
+			} else {
 				if (dy > 0)
 					move = 3;
 				else
 					move = 4;
 			}
-		} 
-		else {
+		} else {
 			move = randomGenerator.nextInt(5);
 		}
 
 		switch (move) {
-		case 0:
-			newPos = this.getPosition();
-			break;
-		case 1:
-			newPos = this.getPosition().getLeft();
-			break;
-		case 2:
-			newPos = this.getPosition().getRight();
-			break;
-		case 3:
-			newPos = this.getPosition().getUp();
-			break;
-		case 4:
-			newPos = this.getPosition().getDown();
-			break;
+			case 0:
+				newPos = this.getPosition();
+				break;
+			case 1:
+				newPos = this.getPosition().getLeft();
+				break;
+			case 2:
+				newPos = this.getPosition().getRight();
+				break;
+			case 3:
+				newPos = this.getPosition().getUp();
+				break;
+			case 4:
+				newPos = this.getPosition().getDown();
+				break;
 		}
+
 		switch(board[newPos.getX()][newPos.getY()]){
 		// monster can move
 		case '.':
