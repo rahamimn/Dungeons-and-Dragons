@@ -10,9 +10,9 @@ public class Mage extends Player {
 	private int hitTimes;
 	private int range;
 	
-	public Mage(String name, int health, int attackPoints, int defensePoints, Position position, 
+	public Mage(String name, int health, int attackPoints, int defensePoints, Position position, RandomGenerator srandomGenerator,
 			int spellPower, int manaPool, int cost, int hitTimes, int range) {
-		super(name, health, attackPoints, defensePoints, position);
+		super(name, health, attackPoints, defensePoints, position, srandomGenerator);
 		this.spellPower = spellPower;
 		this.manaPool = manaPool;
 		this.currentMana = manaPool / 4;
@@ -32,46 +32,41 @@ public class Mage extends Player {
 	
 	@Override
 	// blizzard
-	public boolean castSpecialAbility(ArrayList<Enemy> enemies) {
-		if (this.currentMana < this.cost)
-			return false;
-
+	public ArrayList<Enemy>  castSpecialAbility(ArrayList<Enemy> enemies) {
+		ArrayList<Enemy> deadEnemies = new ArrayList<Enemy>();
+		if (this.currentMana < this.cost){
+			ui.cantCastSpecial();
+			return deadEnemies;
+		}
 		this.currentMana -= this.cost;
 		int hits = 0;
 		while(hits < this.hitTimes && this.hasEnemyInRange(enemies)){
 			Enemy randEnemy = selectRandEnemyInRange(enemies);
-			AttemptDamage(randEnemy);
+			boolean isDead = AttemptDamage(randEnemy);
+			if(isDead){
+				enemies.remove(randEnemy);
+				deadEnemies.add(randEnemy);
+			}
 			hits++;
 		}
-		return true;
+		return deadEnemies;
 	}
 
-	private void AttemptDamage(Enemy enemy) {
-
-//		System.out.println("FIGHT in Special Ability!");
-//		int userAttackPts = this.rollAttackForCombat(randomGenerator, i);
-//		int enemyDefensePts = enemy.rollDefenseForCombat(randomGenerator, i);
-//		int diff = userAttackPts - enemyDefensePts;
-//		if (diff > 0){
-//			System.out.println("enemy.getHealth() = " + enemy.getHealth());
-//			enemy.decHealth(diff);
-//			System.out.println("now health is  = " + enemy.getHealth());
-//			if (enemy.getHealth() <= 0) {
-//				System.out.println("Health is over");
-//				this.decExperience(0-diff); // diff is negative
-//				this.board = removeUnitFromBoard(enemy);
-//
-//				if (enemiesCounter <=0 ){
-//					isNextLevel = true;
-//				}
-//
-//			}
-//		}
-//		else{
-//			System.out.println("No damage happend");
-//		}
-
-
+	private boolean AttemptDamage(Enemy enemy) {
+		int enemyDefensePts = enemy.rollDefenseForCombat();
+		int diff = this.spellPower - enemyDefensePts;
+		if (diff > 0) {
+			enemy.decHealth(diff);
+			//defender is dead!
+			if (enemy.getHealth() <= 0) {
+				this.incExperience(enemy.getExperience());
+				ui.printSpecial(this,  enemy, this.spellPower, enemyDefensePts, diff);
+				return true;
+			}
+			return false;
+		} 
+		ui.printSpecial(this, enemy, this.spellPower, enemyDefensePts, 0);
+		return false;
 	}
 
 
@@ -84,10 +79,9 @@ public class Mage extends Player {
 			}
 		}
 
-		int index = getRandomNumberInRange(0, enemiesInRange.size()-1);
-		Enemy enemyToReturn = enemiesInRange.get(index);
+		int index = this.randomGenerator.nextInt(enemiesInRange.size()-1);
+		return enemiesInRange.get(index);
 
-		return enemyToReturn;
 	}
 
 	private boolean hasEnemyInRange(ArrayList<Enemy> enemies) {
@@ -117,16 +111,16 @@ public class Mage extends Player {
 		return base + "\n+" + 25 * this.getLevel() + " maximum mana, +" + 10 * this.getLevel() + " spell power";
 	}
 
-	//---------------- nir: to delete
-	private static int getRandomNumberInRange(int min, int max) {
-
-		if (min >= max) {
-			throw new IllegalArgumentException("max must be greater than min");
-		}
-
-		Random r = new Random();
-		return r.nextInt((max - min) + 1) + min;
-	}
+//	//---------------- nir: to delete
+//	private static int getRandomNumberInRange(int min, int max) {
+//
+//		if (min >= max) {
+//			throw new IllegalArgumentException("max must be greater than min");
+//		}
+//
+//		Random r = new Random();
+//		return r.nextInt((max - min) + 1) + min;
+//	}
 
 
 }

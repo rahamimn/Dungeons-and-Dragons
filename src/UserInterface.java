@@ -5,26 +5,25 @@ public class UserInterface {
 	
 	public UserInterface(){ }
 	
-	public Player selectPlayer(ArrayList<Player> players){
+	public Player selectPlayer(ArrayList<Player> players, ActionReader chooseAction){
 		System.out.println("Select Player:\n");
 
 		for (int i = 0; i < players.size(); i++){
 			System.out.println(i+1 + ". " + players.get(i).unitStr());
 		}
-
-		Scanner sc = new Scanner(System.in);
-		int choice = sc.nextInt();
+		
+		int choice = Integer.parseInt(chooseAction.nextAction());
 		Player chosen = players.get(choice-1);
 		System.out.println("You have selected:\n" + chosen.unitStr());
 		System.out.println("Use w/s/a/d to move.\nUse e for special ability or q to pass.");
 		return players.get(choice-1);
 	}
 	
-	public char getMoveFromUser(){
-		Scanner sc = new Scanner(System.in);
-		char move = sc.next().charAt(0);
-		return move;
-	}
+//	public char getMoveFromUser(){
+//		Scanner sc = new Scanner(System.in);
+//		char move = sc.next().charAt(0);
+//		return move;
+//	}
 	
 
 	public void printBoard(char[][] board, Player player){
@@ -59,6 +58,18 @@ public class UserInterface {
 
 	public void printLevelUp(Player player){
 		System.out.println(player.levelUpStr());
+	}
+	
+	
+
+	public void printSpecial(Player player, Enemy enemy, int spellPower, int enemyDefensePts, int diff) {
+		System.out.println("cast special ability");
+		
+	}
+
+	public void cantCastSpecial() {
+		System.out.println("sorry you cant case special ability!");
+		
 	}
 	
 }

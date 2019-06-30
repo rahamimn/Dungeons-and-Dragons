@@ -7,10 +7,12 @@ public class Trap extends Enemy {
 	private int relocationTime;
 	private int visibilityTime;
 	private int ticksCount;
-	
-	public Trap(String name, int health, int attackPoints, int defensePoints, Position position, int experience,
-			char tile, int relocationRange, int relocationTime, int visibilityTime) {
-		super(name, health, attackPoints, defensePoints, position, experience, tile);
+	private boolean visible=true;
+
+	public Trap(String name, int health, int attackPoints, int defensePoints, Position position,
+			RandomGenerator randomGenerator, int experience, char tile, int relocationRange, int relocationTime,
+			int visibilityTime) {
+		super(name, health, attackPoints, defensePoints, position, randomGenerator, experience, tile);
 		this.relocationRange = relocationRange;
 		this.relocationTime = relocationTime;
 		this.visibilityTime = visibilityTime;
@@ -18,98 +20,65 @@ public class Trap extends Enemy {
 	}
 
 	@Override
-	public int turn(Position playerPos, Game game, RandomGenerator randomGenerator, int i) {
-		char[][] board = game.getBoard();
-		if (this.ticksCount == this.relocationTime){
-			this.ticksCount = 0;
-			System.out.println("inside turn()");
-			ArrayList list = getAllFreePositionsInRange(this.getPosition(), this.relocationRange, board);
-			game.setBoard(relocateRandomly(list, board));
-		}
-		else{
-			this.ticksCount++;
-			if(range(playerPos) < 2){
-				System.out.println("Trap fight!");
-				int userAttackPts = game.getChosen().rollAttackForCombat(randomGenerator, i);
-				System.out.println("userAttackPts = " + userAttackPts);
-
-				int enemyDefensePts = this.rollDefenseForCombat(randomGenerator, i);
-				System.out.println("enemyDefensePts = " + enemyDefensePts);
-
-				int diff = userAttackPts - enemyDefensePts;
-
-				System.out.println("Health before = " + this.getHealth());
-				if (diff > 0) {
-					this.decHealth(diff); // diff is negative
-					System.out.println("Health after = " + this.getHealth());
-					if (this.getHealth() <= 0) {
-						game.getChosen().decExperience(0-diff); // diff is negative
-						char[][] newBoard = game.removeUnitFromBoard(this);
-						game.setBoard(newBoard);
-					}
-				}
-
-			}
-		}
+	public Object[] turn(Player player, char[][] board) {
 		
-		if(this.ticksCount < this.visibilityTime){
-			//trap visible
-		}
-		else{
-			//trap invisible
-		}
-		//delete after
-		return -1;
-	}
-
-
-
-	//------------------- helpers
-	public ArrayList<Position> getAllFreePositionsInRange(Position pos, int range, char[][] board) {
-		ArrayList list = new ArrayList();
-		double currRange;
-
-		for (int x = 0; x < board.length; x++) {
-			for (int y = 0; y < board[x].length; y++) {
-				currRange = Math.sqrt(Math.pow(pos.getX() - x, 2) + Math.pow(pos.getY() - y, 2));
-
-				if (range - currRange >= 0) {
-					Position currPosition = new Position(x, y);
-
-					if (currPosition.inBounds() && board[x][y] == '.') {
-						list.add(currPosition);
-					}
-				}
+		Boolean bol = new Boolean(false);
+		Position newPosition = this.getPosition();
+		if (this.ticksCount == this.relocationTime) {
+			this.ticksCount = 0;
+			ArrayList<Position> freePositions = getAllFreePositionsInRange(board);
+			if(!freePositions.isEmpty()){
+				int index = this.randomGenerator.nextInt(freePositions.size() - 1);
+				newPosition = freePositions.get(index);
+			}
+			
+		} 
+		else {
+			this.ticksCount++;
+			if (range(player.getPosition()) < 2) {
+				boolean userDead = this.meleeCombatEnemy(player);
+				bol = new Boolean(userDead);
 			}
 		}
-		return list;
-	}
 
-	public char[][] relocateRandomly(ArrayList<Position>list, char[][] board){
-
-		System.out.println("Old Position = " + this.getPosition().getX() + "," + this.getPosition().getY());
-		int index = getRandomNumberInRange(0, list.size()-1);
-		Position currPosition = this.getPosition();
-		Position newPosition = list.get(index);
-		this.setPosition(newPosition);
-		System.out.println("New Position = " + this.getPosition().getX() + "," + this.getPosition().getY());
-		char tile = board[currPosition.getX()][currPosition.getY()];
-		board[newPosition.getX()][newPosition.getY()] = tile;
-		board[currPosition.getX()][currPosition.getY()] = '.';
-
-		return board;
-	}
-
-	private static int getRandomNumberInRange(int min, int max) {
-
-		if (min >= max) {
-			throw new IllegalArgumentException("max must be greater than min");
+		if (this.ticksCount < this.visibilityTime) {
+			this.visible = true;
+		} else {
+			this.visible = false;
 		}
-
-		Random r = new Random();
-		return r.nextInt((max - min) + 1) + min;
+		Object[] toret = {bol, newPosition};
+		return toret;
 	}
 
 	
+	// ------------------- helpers
+	public ArrayList<Position> getAllFreePositionsInRange(char[][] board) {
+		ArrayList<Position> list = new ArrayList<Position>();
+		for (int x = 0; x < board.length; x++) {
+			for (int y = 0; y < board[x].length; y++) {
+				if (this.range(new Position(x, y)) <= this.relocationRange && board[x][y] == '.') 
+						list.add(new Position(x, y));
+				}
+			}
+		return list;
+		}
+	
+
+//	public char[][] relocateRandomly(ArrayList<Position> list, char[][] board) {
+//
+//		
+//		
+//		return board;
+//	}
+
+//	private static int getRandomNumberInRange(int min, int max) {
+//
+//		if (min >= max) {
+//			throw new IllegalArgumentException("max must be greater than min");
+//		}
+//
+//		Random r = new Random();
+//		return r.nextInt((max - min) + 1) + min;
+//	}
 
 }

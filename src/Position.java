@@ -45,8 +45,12 @@ public class Position {
 		return (x >= 0 && y >= 0);
 	}
 
-	public void printPosition(String message){
-		System.out.println("["+message+"] | ("+x+","+y+")");
+//	public void printPosition(String message){
+//		System.out.println("["+message+"] | ("+x+","+y+")");
+//	}
+	
+	public boolean isEqual(Position toCompare){
+		return (toCompare.getX() == this.getX() && toCompare.getY() == this.getY()); 
 	}
 
 

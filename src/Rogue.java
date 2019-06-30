@@ -7,8 +7,8 @@ public class Rogue extends Player {
 	private int currentEnergy;
 	private final int maxEnergy = 100;
 
-	public Rogue(String name, int health, int attackPoints, int defensePoints, Position position, int cost) {
-		super(name, health, attackPoints, defensePoints, position);
+	public Rogue(String name, int health, int attackPoints, int defensePoints, Position position, RandomGenerator srandomGenerator, int cost) {
+		super(name, health, attackPoints, defensePoints, position, srandomGenerator);
 		this.cost = cost;
 		this.currentEnergy = maxEnergy;
 	}
@@ -19,30 +19,49 @@ public class Rogue extends Player {
 		this.incAttack(3);
 	}
 
-	@Override
-	public boolean castSpecialAbility(ArrayList<Enemy> enemies) {
-		if (this.currentEnergy < this.cost)
-			return false;
-		this.currentEnergy -= this.cost;
-		List<Enemy> enemiesInRange = this.getEnemiesInRange(2);
-		for (Enemy enemy : enemiesInRange){
-			AttemptDamage(enemy, this.attackPoints);
+	private ArrayList<Enemy> getEnemiesInRange(ArrayList<Enemy> enemies) {
+		ArrayList<Enemy> toret = new ArrayList<Enemy>();
+		for(Enemy enemy : enemies){
+			if(this.range(enemy.getPosition()) < 2)
+				toret.add(enemy);
 		}
-		return true;
+		return toret;
+	}
+
+	
+	@Override
+	public ArrayList<Enemy> castSpecialAbility(ArrayList<Enemy> enemies) {
+		ArrayList<Enemy> deadEnemies = new ArrayList<Enemy>();
+		if (this.currentEnergy < this.cost){
+			ui.cantCastSpecial();
+			return deadEnemies;
+		}
+		this.currentEnergy -= this.cost;
+		ArrayList<Enemy> enemiesInRange = this.getEnemiesInRange(enemies);
+		for (Enemy enemy : enemiesInRange){
+			boolean enemyDead = this.attemptDamage(enemy);
+			deadEnemies.add(enemy);
+		}
+		return deadEnemies;
 	}
 
 
-	private void AttemptDamage(Enemy enemy, int attackPoints) {
-		// TODO Auto-generated method stub
-
+	private boolean attemptDamage(Enemy enemy){
+		int enemyDefensePts = enemy.rollDefenseForCombat();
+		int diff = this.attackPoints - enemyDefensePts;
+		if (diff > 0) {
+			enemy.decHealth(diff);
+			//defender is dead!
+			if (enemy.getHealth() <= 0) {
+				this.incExperience(enemy.getExperience());
+				ui.printSpecial(this,  enemy, this.attackPoints, enemyDefensePts, diff);
+				return true;
+			}
+			return false;
+		} 
+		ui.printSpecial(this, enemy, this.attackPoints, enemyDefensePts, 0);
+		return false;
 	}
-
-
-	private List<Enemy> getEnemiesInRange(int i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public void gameTickUpdate() {
@@ -50,9 +69,8 @@ public class Rogue extends Player {
 
 	}
 
-	public String playerStr(){
-		return this.getName() + "\tHealth: " + this.getHealth() + "\tAttack damage: " + this.getAttack()
-				+ "\tDefense: "+ this.getDefense() + "\tLevel: "+ this.getLevel() + "\tExperience: " + this.getExperience()+
-				"/50\tEnergy: " + this.currentEnergy + "/" + this.maxEnergy;
+	public String unitStr(){
+		String base = super.unitStr();
+		return base + "\tEnergy: " + this.currentEnergy + "/" + this.maxEnergy;
 	}
 }

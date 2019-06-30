@@ -5,21 +5,23 @@ public class Warrior extends Player{
 	private int cooldown;
 	private int remaining;
 	
-	public Warrior(String name, int health, int attackPoints, int defensePoints, Position position, int cooldown) {
-		super(name, health, attackPoints, defensePoints, position);
+	public Warrior(String name, int health, int attackPoints, int defensePoints, Position position, RandomGenerator srandomGenerator,  int cooldown) {
+		super(name, health, attackPoints, defensePoints, position, srandomGenerator);
 		this.cooldown = cooldown;
-		this.remaining = cooldown;
+		this.remaining = 0;
 	}
 
 	// heal
-	public boolean castSpecialAbility(ArrayList<Enemy> enemies){
+	public ArrayList<Enemy> castSpecialAbility(ArrayList<Enemy> enemies){
 		if (this.remaining > 0){
-			return false;
+			ui.cantCastSpecial();
 		}
-		this.remaining = cooldown;
-		int inc = Math.min(this.currentHealth + 2 * this.defensePoints, this.healthPool);
-		this.currentHealth += inc;
-		return true;
+		else{
+			this.remaining = cooldown;
+			this.currentHealth = Math.min(this.currentHealth + 2 * this.defensePoints, this.healthPool);
+		}
+		return new ArrayList<Enemy>();
+		
 	}
 	
 	
@@ -33,13 +35,10 @@ public class Warrior extends Player{
 
 	@Override
 	public void gameTickUpdate() {
-		if(this.remaining == 0)
-			this.remaining = cooldown;
-		else
-			this.remaining--;
+		this.remaining--;
 	}
 	
-	public String playerStr(){
+	public String unitStr(){
 		String base = super.unitStr();
 		return base + "\tAbility cooldown: " + this.cooldown + "\tRemaining: " + this.remaining;
 	}

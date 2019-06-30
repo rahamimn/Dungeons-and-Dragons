@@ -19,39 +19,22 @@ public class Main {
 
 
         /** Get all level files */
-//		File folder = new File(args[0]);
-        File folder = new File(Paths.get("").toAbsolutePath().toString() + "/src");
+		File folder = new File(args[0]);
+       // File folder = new File(Paths.get("").toAbsolutePath().toString() + "/src");
         File[] listOfFiles = folder.listFiles();
         ArrayList<ArrayList<Object>> list = new ArrayList<ArrayList<Object>>();
 
         for (File file : listOfFiles) {
             if (file.isFile() && file.getName().contains("level")) {
-                String level = (file.getName()).charAt(6) + "";
+         //       String level = (file.getName()).charAt(6) + "";
+            	String level = (file.getName().substring(6, file.getName().length()-4));
                 ArrayList<Object> map = new ArrayList<>();
                 map.add(Integer.parseInt(level));
                 map.add(file);
                 list.add(map);
             }
         }
-
-        RandomGenerator num_generator = null;
-        ActionReader action_generator = null;
-        /** Get game actions */
-        if (is_deterministic) { // nir; todo; remove the '!'
-            num_generator = new DeterministicNums("src/random_numbers.txt"); // nir; todo: handle this path
-            action_generator = new DeterministicActions("src/user_actions.txt");
-
-            System.out.println("DETERMINISTIC num_generator = " + num_generator.nextInt(100));
-            System.out.println("DETERMINISTIC action_generator = " + action_generator.nextAction());
-        } else {
-            num_generator = new RandomGeneratorImpl();
-            action_generator = new ActionReaderImpl();
-
-            System.out.println("num_generator = " + num_generator.nextInt(100));
-            System.out.println("action_generator = " + action_generator.nextAction());
-
-        }
-
+        
         /** Sort level files by number */
         class MySort implements Comparator<ArrayList<Object>> {
             public int compare(ArrayList<Object> a, ArrayList<Object> b) {
@@ -59,23 +42,37 @@ public class Main {
             }
         }
         Collections.sort(list, new MySort());
+        
 
-        ArrayList gameBoards = createGameBoards(list);
-        Game game = new Game(gameBoards);
-        game.start(num_generator);
+        RandomGenerator num_generator = null;
+        ActionReader action_generator = null;
+        /** Get game actions */
+        if (is_deterministic) { 
+            num_generator = new DeterministicNums("random_numbers.txt");
+            action_generator = new DeterministicActions("user_actions.txt");
+
+        } else {
+            num_generator = new RandomGeneratorImpl();
+            action_generator = new ActionReaderImpl();
+        }
+
+        
+        ArrayList<char[][]> gameBoards = createGameBoards(list);
+        Game game = new Game(gameBoards, num_generator, action_generator);
+        game.start();
     }
 
 
     public static ArrayList<char[][]> createGameBoards(ArrayList<ArrayList<Object>> boardsFileList) throws IOException {
 
-        ArrayList<char[][]> boardsList = new ArrayList();
+        ArrayList<char[][]> boardsList = new ArrayList<char[][]>();
 
         for (int levelNum = 0; levelNum < boardsFileList.size(); levelNum++) {
             File file = (File) (boardsFileList.get(levelNum)).get(1);
             Scanner sc = new Scanner(file);
             int width = sc.nextLine().length();
             int height = 0;
-            String path = "src/level " + (levelNum + 1) + ".txt";
+            String path = "level " + (levelNum + 1) + ".txt";
             BufferedReader reader = new BufferedReader(new FileReader(path));
 
             while (reader.readLine() != null) height++;
